@@ -4,6 +4,27 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
+function Field({
+  label, name, type = 'text', placeholder, value, onChange,
+}: {
+  label: string; name: string; type?: string; placeholder?: string
+  value: string; onChange: (name: string, value: string) => void
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(name, e.target.value)}
+        required
+        placeholder={placeholder}
+        className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  )
+}
+
 export default function RegisterPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -35,20 +56,6 @@ export default function RegisterPage() {
     router.push('/login?registered=1')
   }
 
-  const Field = ({ label, name, type = 'text', placeholder }: { label: string; name: string; type?: string; placeholder?: string }) => (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-      <input
-        type={type}
-        value={form[name as keyof typeof form]}
-        onChange={(e) => update(name, e.target.value)}
-        required
-        placeholder={placeholder}
-        className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-  )
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg">
@@ -60,16 +67,16 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
-              <Field label="ชื่อ" name="firstName" placeholder="สมชาย" />
-              <Field label="นามสกุล" name="lastName" placeholder="ใจดี" />
+              <Field label="ชื่อ" name="firstName" placeholder="สมชาย" value={form.firstName} onChange={update} />
+              <Field label="นามสกุล" name="lastName" placeholder="ใจดี" value={form.lastName} onChange={update} />
             </div>
-            <Field label="อีเมล" name="email" type="email" placeholder="example@email.com" />
-            <Field label="เบอร์โทรศัพท์" name="phone" type="tel" placeholder="08X-XXX-XXXX" />
-            <Field label="เลขบัตรประชาชน" name="idCardNumber" placeholder="X-XXXX-XXXXX-XX-X" />
-            <Field label="เลขใบขับขี่" name="drivingLicenseNumber" placeholder="XXXXXXXXXXXXXXX" />
-            <Field label="วันหมดอายุใบขับขี่" name="drivingLicenseExpiry" type="date" />
-            <Field label="รหัสผ่าน" name="password" type="password" placeholder="อย่างน้อย 8 ตัวอักษร" />
-            <Field label="ยืนยันรหัสผ่าน" name="confirmPassword" type="password" placeholder="••••••••" />
+            <Field label="อีเมล" name="email" type="email" placeholder="example@email.com" value={form.email} onChange={update} />
+            <Field label="เบอร์โทรศัพท์" name="phone" type="tel" placeholder="08X-XXX-XXXX" value={form.phone} onChange={update} />
+            <Field label="เลขบัตรประชาชน" name="idCardNumber" placeholder="X-XXXX-XXXXX-XX-X" value={form.idCardNumber} onChange={update} />
+            <Field label="เลขใบขับขี่" name="drivingLicenseNumber" placeholder="XXXXXXXXXXXXXXX" value={form.drivingLicenseNumber} onChange={update} />
+            <Field label="วันหมดอายุใบขับขี่" name="drivingLicenseExpiry" type="date" value={form.drivingLicenseExpiry} onChange={update} />
+            <Field label="รหัสผ่าน" name="password" type="password" placeholder="อย่างน้อย 8 ตัวอักษร" value={form.password} onChange={update} />
+            <Field label="ยืนยันรหัสผ่าน" name="confirmPassword" type="password" placeholder="••••••••" value={form.confirmPassword} onChange={update} />
 
             <button
               type="submit"
