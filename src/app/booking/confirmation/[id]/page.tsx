@@ -13,12 +13,7 @@ interface Rental {
   deposit: number
   status: string
   pickupLocation?: string
-  vehicleId: {
-    brand: string
-    model: string
-    year: number
-    images: string[]
-  }
+  vehicleId: { brand: string; model: string; year: number; images: string[] }
 }
 
 export default function BookingConfirmationPage() {
@@ -33,71 +28,103 @@ export default function BookingConfirmationPage() {
       .then((d) => { setRental(d.rental); setLoading(false) })
   }, [id])
 
-  if (loading) return <div className="text-center py-20 text-gray-400">กำลังโหลด...</div>
-  if (!rental) return <div className="text-center py-20 text-gray-500">ไม่พบข้อมูลการจอง</div>
+  if (loading) return (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-muted)' }}>กำลังโหลด...</span>
+    </div>
+  )
+  if (!rental) return (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-secondary)' }}>ไม่พบข้อมูลการจอง</span>
+    </div>
+  )
 
   const fmt = (d: string) => new Date(d).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
-      <div className="text-center mb-10">
-        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-4xl">✅</span>
-        </div>
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">จองรถสำเร็จ!</h1>
-        <p className="text-gray-500">รอการยืนยันจากเจ้าหน้าที่ภายใน 24 ชั่วโมง</p>
-      </div>
+    <div style={{ minHeight: '80vh', paddingTop: '64px', paddingBottom: '80px', position: 'relative' }}>
+      <div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(ellipse 50% 50% at 50% 30%, rgba(245,166,35,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-      <div className="bg-white rounded-2xl shadow-sm border p-8 space-y-5">
-        <div className="text-center pb-5 border-b">
-          <p className="text-sm text-gray-500 mb-1">รหัสการจอง</p>
-          <p className="text-2xl font-bold text-blue-600 tracking-wide">{rental.rentalCode}</p>
+      <div className="container" style={{ maxWidth: '560px', position: 'relative', zIndex: 1 }}>
+        {/* Success icon */}
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <div style={{
+            width: '72px', height: '72px',
+            borderRadius: '50%',
+            background: 'var(--accent-muted)',
+            border: '1px solid var(--border-accent)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 20px',
+          }}>
+            <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '28px', color: 'var(--accent)' }}>✓</span>
+          </div>
+          <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 900, letterSpacing: '-0.02em', color: 'var(--text-primary)', marginBottom: '8px' }}>
+            จองรถสำเร็จ!
+          </h1>
+          <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '15px', color: 'var(--text-secondary)' }}>
+            รอการยืนยันจากเจ้าหน้าที่ภายใน 24 ชั่วโมง
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <p className="text-gray-400 mb-1">รถที่จอง</p>
-            <p className="font-semibold text-gray-800">{rental.vehicleId?.brand} {rental.vehicleId?.model} ({rental.vehicleId?.year})</p>
+        {/* Booking card */}
+        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', padding: '36px', marginBottom: '24px' }}>
+          {/* Booking code */}
+          <div style={{ textAlign: 'center', paddingBottom: '24px', borderBottom: '1px solid var(--border)', marginBottom: '24px' }}>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>รหัสการจอง</p>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '28px', fontWeight: 900, letterSpacing: '0.05em', color: 'var(--accent)' }}>{rental.rentalCode}</p>
           </div>
-          <div>
-            <p className="text-gray-400 mb-1">สถานะ</p>
-            <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">รอยืนยัน</span>
-          </div>
-          <div>
-            <p className="text-gray-400 mb-1">วันรับรถ</p>
-            <p className="font-medium text-gray-800">{fmt(rental.startDate)}</p>
-          </div>
-          <div>
-            <p className="text-gray-400 mb-1">วันคืนรถ</p>
-            <p className="font-medium text-gray-800">{fmt(rental.endDate)}</p>
-          </div>
-          {rental.pickupLocation && (
-            <div className="col-span-2">
-              <p className="text-gray-400 mb-1">สถานที่รับรถ</p>
-              <p className="font-medium text-gray-800">{rental.pickupLocation}</p>
+
+          {/* Details */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div>
+              <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>รถที่จอง</p>
+              <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{rental.vehicleId?.brand} {rental.vehicleId?.model}</p>
+              <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>({rental.vehicleId?.year})</p>
             </div>
-          )}
+            <div>
+              <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>สถานะ</p>
+              <span style={{ padding: '4px 12px', borderRadius: '20px', background: 'rgba(245,166,35,0.12)', fontFamily: 'Raleway, sans-serif', fontSize: '12px', fontWeight: 700, letterSpacing: '0.06em', color: '#F5A623' }}>
+                รอยืนยัน
+              </span>
+            </div>
+            <div>
+              <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>วันรับรถ</p>
+              <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-primary)' }}>{fmt(rental.startDate)}</p>
+            </div>
+            <div>
+              <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>วันคืนรถ</p>
+              <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-primary)' }}>{fmt(rental.endDate)}</p>
+            </div>
+            {rental.pickupLocation && (
+              <div style={{ gridColumn: '1 / -1' }}>
+                <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>สถานที่รับรถ</p>
+                <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-primary)' }}>{rental.pickupLocation}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Price */}
+          <div style={{ borderTop: '1px solid var(--border)', marginTop: '24px', paddingTop: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
+              <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-secondary)' }}>ราคาทั้งหมด</span>
+              <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '28px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.02em' }}>฿{rental.totalPrice.toLocaleString()}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>มัดจำ (30%)</span>
+              <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '15px', color: 'var(--text-secondary)' }}>฿{rental.deposit.toLocaleString()}</span>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-blue-50 rounded-xl p-4 border-t mt-4">
-          <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-600">ราคาทั้งหมด</span>
-            <span className="font-bold text-blue-700 text-lg">฿{rental.totalPrice.toLocaleString()}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">มัดจำ (30%)</span>
-            <span className="text-gray-700">฿{rental.deposit.toLocaleString()}</span>
-          </div>
+        {/* Actions */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <Link href="/customer/bookings" className="btn-outline" style={{ justifyContent: 'center', padding: '14px' }}>
+            ดูประวัติการจอง
+          </Link>
+          <Link href="/vehicles" className="btn-primary" style={{ justifyContent: 'center', padding: '14px' }}>
+            จองรถเพิ่ม
+          </Link>
         </div>
-      </div>
-
-      <div className="flex gap-4 mt-8">
-        <Link href="/customer/bookings" className="flex-1 py-3 text-center border border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-colors font-medium">
-          ดูประวัติการจอง
-        </Link>
-        <Link href="/vehicles" className="flex-1 py-3 text-center bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium">
-          จองรถเพิ่ม
-        </Link>
       </div>
     </div>
   )

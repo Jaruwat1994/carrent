@@ -38,89 +38,122 @@ export default function VehicleDetailPage() {
       .then((d) => { setVehicle(d.vehicle); setLoading(false) })
   }, [id])
 
-  if (loading) return <div className="max-w-5xl mx-auto px-4 py-20 text-center text-gray-400">กำลังโหลด...</div>
-  if (!vehicle) return <div className="max-w-5xl mx-auto px-4 py-20 text-center text-gray-500">ไม่พบรถ</div>
+  if (loading) return (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-muted)' }}>กำลังโหลด...</span>
+    </div>
+  )
+  if (!vehicle) return (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-secondary)' }}>ไม่พบรถ</span>
+    </div>
+  )
 
   const fuelLabel: Record<string, string> = { gasoline: 'เบนซิน', diesel: 'ดีเซล', hybrid: 'ไฮบริด', electric: 'ไฟฟ้า' }
+  const isAvailable = vehicle.status === 'available'
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <Link href="/vehicles" className="text-blue-600 hover:underline text-sm mb-6 inline-block">
-        ← กลับไปรายการรถ
-      </Link>
+    <div style={{ paddingTop: '48px', paddingBottom: '80px' }}>
+      <div className="container">
+        {/* Breadcrumb */}
+        <Link href="/vehicles" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '32px' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
+          ← กลับไปรายการรถ
+        </Link>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        <div className="rounded-2xl overflow-hidden bg-gray-100 h-72 lg:h-96 flex items-center justify-center">
-          {vehicle.images?.[0] ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={vehicle.images[0]} alt={vehicle.model} className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-8xl">🚗</span>
-          )}
-        </div>
-
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-1">{vehicle.brand} {vehicle.model}</h1>
-          <p className="text-gray-400 mb-4">{vehicle.year} • {vehicle.color}</p>
-
-          <div className="flex flex-wrap gap-2 mb-6">
-            <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm">{vehicle.seats} ที่นั่ง</span>
-            <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
-              {vehicle.transmission === 'automatic' ? 'เกียร์ออโต้' : 'เกียร์ธรรมดา'}
-            </span>
-            <span className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm">
-              {fuelLabel[vehicle.fuelType] || vehicle.fuelType}
-            </span>
-            {vehicle.location && (
-              <span className="px-3 py-1 bg-yellow-50 text-yellow-600 rounded-full text-sm">📍 {vehicle.location}</span>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: '48px', alignItems: 'start' }}>
+          {/* Image */}
+          <div style={{ borderRadius: 'var(--radius-card)', overflow: 'hidden', background: 'var(--bg-elevated)', aspectRatio: '16/9', position: 'relative' }}>
+            {vehicle.images?.[0] ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={vehicle.images[0]} alt={vehicle.model} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              <div style={{ width: '100%', height: '100%', minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, var(--bg-elevated), var(--bg-secondary))' }}>
+                <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '72px', color: 'var(--text-muted)' }}>◎</span>
+              </div>
+            )}
+            {isAvailable && (
+              <div style={{ position: 'absolute', top: '16px', left: '16px', padding: '6px 14px', background: 'rgba(13,13,20,0.85)', backdropFilter: 'blur(8px)', border: '1px solid rgba(110,224,138,0.3)', borderRadius: '20px' }}>
+                <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', color: '#6EE08A' }}>AVAILABLE</span>
+              </div>
             )}
           </div>
 
-          <div className="bg-blue-50 rounded-2xl p-5 mb-6">
-            <h3 className="font-semibold text-gray-700 mb-3">ราคาเช่า</h3>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <p className="text-xl font-bold text-blue-700">฿{vehicle.pricePerDay.toLocaleString()}</p>
-                <p className="text-xs text-gray-500 mt-1">ต่อวัน</p>
-              </div>
-              <div>
-                <p className="text-xl font-bold text-blue-700">฿{vehicle.pricePerWeek.toLocaleString()}</p>
-                <p className="text-xs text-gray-500 mt-1">ต่อสัปดาห์</p>
-              </div>
-              <div>
-                <p className="text-xl font-bold text-blue-700">฿{vehicle.pricePerMonth.toLocaleString()}</p>
-                <p className="text-xs text-gray-500 mt-1">ต่อเดือน</p>
-              </div>
+          {/* Info panel */}
+          <div>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '8px' }}>
+              {vehicle.year} · {vehicle.color}
+            </p>
+            <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(26px, 3vw, 36px)', fontWeight: 900, letterSpacing: '-0.03em', color: 'var(--text-primary)', marginBottom: '20px' }}>
+              {vehicle.brand} {vehicle.model}
+            </h1>
+
+            {/* Tags */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>
+              {[
+                `${vehicle.seats} ที่นั่ง`,
+                vehicle.transmission === 'automatic' ? 'เกียร์ออโต้' : 'เกียร์ธรรมดา',
+                fuelLabel[vehicle.fuelType] || vehicle.fuelType,
+                ...(vehicle.location ? [`📍 ${vehicle.location}`] : []),
+              ].map((tag) => (
+                <span key={tag} style={{ padding: '5px 14px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                  {tag}
+                </span>
+              ))}
             </div>
-          </div>
 
-          {vehicle.description && (
-            <p className="text-gray-600 text-sm mb-6 leading-relaxed">{vehicle.description}</p>
-          )}
-
-          {vehicle.features?.length > 0 && (
-            <div className="mb-6">
-              <h3 className="font-semibold text-gray-700 mb-2">คุณสมบัติ</h3>
-              <div className="flex flex-wrap gap-2">
-                {vehicle.features.map((f) => (
-                  <span key={f} className="text-xs px-3 py-1 bg-gray-100 text-gray-600 rounded-full">{f}</span>
+            {/* Pricing */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-accent)', borderRadius: 'var(--radius-card)', padding: '24px', marginBottom: '24px' }}>
+              <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '16px' }}>ราคาเช่า</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                {[
+                  { amount: vehicle.pricePerDay, unit: 'ต่อวัน' },
+                  { amount: vehicle.pricePerWeek, unit: 'ต่อสัปดาห์' },
+                  { amount: vehicle.pricePerMonth, unit: 'ต่อเดือน' },
+                ].map((p, i) => (
+                  <div key={p.unit} style={{ padding: '16px 12px', textAlign: 'center', borderRight: i < 2 ? '1px solid var(--border)' : 'none', background: 'var(--bg-primary)' }}>
+                    <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '20px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.02em' }}>
+                      ฿{p.amount.toLocaleString()}
+                    </div>
+                    <div style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>{p.unit}</div>
+                  </div>
                 ))}
               </div>
             </div>
-          )}
 
-          {vehicle.status === 'available' ? (
-            <button
-              onClick={() => session ? router.push(`/booking/create?vehicleId=${vehicle._id}`) : router.push('/login')}
-              className="w-full py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors text-lg"
-            >
-              {session ? 'จองรถคันนี้' : 'เข้าสู่ระบบเพื่อจอง'}
-            </button>
-          ) : (
-            <div className="w-full py-4 bg-gray-200 text-gray-500 font-semibold rounded-xl text-center text-lg">
-              รถไม่ว่างในขณะนี้
-            </div>
-          )}
+            {/* Description */}
+            {vehicle.description && (
+              <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '20px' }}>{vehicle.description}</p>
+            )}
+
+            {/* Features */}
+            {vehicle.features?.length > 0 && (
+              <div style={{ marginBottom: '28px' }}>
+                <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '12px' }}>คุณสมบัติ</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {vehicle.features.map((f) => (
+                    <span key={f} style={{ padding: '4px 12px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)' }}>{f}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* CTA */}
+            {isAvailable ? (
+              <button
+                onClick={() => session ? router.push(`/booking/create?vehicleId=${vehicle._id}`) : router.push('/login')}
+                className="btn-primary"
+                style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '15px' }}
+              >
+                {session ? 'จองรถคันนี้' : 'เข้าสู่ระบบเพื่อจอง'}
+              </button>
+            ) : (
+              <div style={{ width: '100%', padding: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius-btn)', textAlign: 'center', fontFamily: 'Sarabun, sans-serif', fontSize: '15px', color: 'var(--text-muted)' }}>
+                รถไม่ว่างในขณะนี้
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

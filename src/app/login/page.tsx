@@ -2,11 +2,14 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { Suspense } from 'react'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const registered = searchParams.get('registered')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -16,13 +19,7 @@ export default function LoginPage() {
     e.preventDefault()
     setError('')
     setLoading(true)
-
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    })
-
+    const result = await signIn('credentials', { email, password, redirect: false })
     setLoading(false)
     if (result?.error) {
       setError('อีเมลหรือรหัสผ่านไม่ถูกต้อง')
@@ -32,58 +29,86 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-sm border p-8">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2 text-center">เข้าสู่ระบบ</h1>
-          <p className="text-gray-400 text-center mb-8 text-sm">ยินดีต้อนรับกลับมา</p>
+    <div style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 24px', position: 'relative' }}>
+      {/* Background glow */}
+      <div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(ellipse 60% 60% at 50% 40%, rgba(245,166,35,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-          {error && (
-            <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg mb-6">
-              {error}
+      <div style={{ width: '100%', maxWidth: '420px', position: 'relative', zIndex: 1 }}>
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <Link href="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 900, fontSize: '24px', color: 'var(--accent)', letterSpacing: '-0.03em' }}>CAR</span>
+            <span style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 300, fontSize: '24px', color: 'var(--text-primary)', letterSpacing: '0.08em' }}>RENT</span>
+          </Link>
+          <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginTop: '8px' }}>Member Access</p>
+        </div>
+
+        {/* Card */}
+        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', padding: '40px 36px' }}>
+          <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: '24px', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-primary)', marginBottom: '6px' }}>เข้าสู่ระบบ</h1>
+          <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-muted)', marginBottom: '28px' }}>ยินดีต้อนรับกลับมา</p>
+
+          {registered && (
+            <div style={{ background: 'rgba(110,224,138,0.1)', border: '1px solid rgba(110,224,138,0.2)', borderRadius: '10px', padding: '12px 16px', marginBottom: '20px' }}>
+              <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: '#6EE08A' }}>สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          {error && (
+            <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '10px', padding: '12px 16px', marginBottom: '20px' }}>
+              <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: '#F87171' }}>{error}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">อีเมล</label>
+              <label className="field-label">อีเมล</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input-field"
                 placeholder="example@email.com"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">รหัสผ่าน</label>
+              <label className="field-label">รหัสผ่าน</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input-field"
                 placeholder="••••••••"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-60"
+              className="btn-primary"
+              style={{ width: '100%', justifyContent: 'center', padding: '14px', opacity: loading ? 0.7 : 1 }}
             >
               {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-500 mt-6">
-            ยังไม่มีบัญชี?{' '}
-            <Link href="/register" className="text-blue-600 hover:underline font-medium">
-              สมัครสมาชิกฟรี
-            </Link>
-          </p>
+          <div style={{ borderTop: '1px solid var(--border)', marginTop: '28px', paddingTop: '24px', textAlign: 'center' }}>
+            <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-muted)' }}>
+              ยังไม่มีบัญชี?{' '}
+              <Link href="/register" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>สมัครสมาชิกฟรี</Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '90vh' }} />}>
+      <LoginForm />
+    </Suspense>
   )
 }

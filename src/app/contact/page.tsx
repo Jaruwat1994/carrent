@@ -1,50 +1,77 @@
 export default function ContactPage() {
+  const info = [
+    { num: '01', title: 'โทรศัพท์', detail: '02-xxx-xxxx', sub: 'จันทร์-ศุกร์ 08:00-18:00' },
+    { num: '02', title: 'อีเมล', detail: 'info@carrent.th', sub: 'ตอบกลับภายใน 24 ชม.' },
+    { num: '03', title: 'ที่อยู่', detail: 'กรุงเทพมหานคร', sub: 'สำนักงานใหญ่' },
+  ]
+
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">ติดต่อเรา</h1>
-      <p className="text-gray-500 mb-10">มีคำถามหรือต้องการความช่วยเหลือ? ทีมงานพร้อมให้บริการ</p>
+    <div style={{ paddingBottom: '80px' }}>
+      {/* Header */}
+      <section style={{ paddingTop: '64px', paddingBottom: '64px', borderBottom: '1px solid var(--border)' }}>
+        <div className="container">
+          <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>Contact</p>
+          <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, letterSpacing: '-0.03em', color: 'var(--text-primary)', marginBottom: '16px' }}>ติดต่อเรา</h1>
+          <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '17px', color: 'var(--text-secondary)', maxWidth: '480px' }}>
+            มีคำถามหรือต้องการความช่วยเหลือ? ทีมงานพร้อมให้บริการ
+          </p>
+        </div>
+      </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        {[
-          { icon: '📞', title: 'โทรศัพท์', detail: '02-xxx-xxxx', sub: 'จ-ศ 08:00-18:00' },
-          { icon: '✉️', title: 'อีเมล', detail: 'info@carrent.th', sub: 'ตอบภายใน 24 ชม.' },
-          { icon: '📍', title: 'ที่อยู่', detail: 'กรุงเทพมหานคร', sub: 'สำนักงานใหญ่' },
-        ].map((c) => (
-          <div key={c.title} className="bg-white rounded-2xl border p-6 text-center shadow-sm">
-            <div className="text-3xl mb-3">{c.icon}</div>
-            <h3 className="font-semibold text-gray-800 mb-1">{c.title}</h3>
-            <p className="text-blue-600 text-sm">{c.detail}</p>
-            <p className="text-gray-400 text-xs mt-1">{c.sub}</p>
-          </div>
-        ))}
-      </div>
+      <section style={{ paddingTop: '64px' }}>
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '40px', alignItems: 'start' }}>
 
-      <div className="bg-white rounded-2xl border p-8 shadow-sm">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">ส่งข้อความหาเรา</h2>
-        <form className="space-y-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">ชื่อ-นามสกุล</label>
-              <input type="text" className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="สมชาย ใจดี" />
+            {/* Info */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {info.map((c) => (
+                <div key={c.title} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', padding: '24px 28px', display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+                  <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 900, letterSpacing: '0.1em', color: 'var(--accent)', paddingTop: '2px' }}>{c.num}</span>
+                  <div>
+                    <h3 style={{ fontFamily: 'Raleway, sans-serif', fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>{c.title}</h3>
+                    <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '15px', color: 'var(--accent)', marginBottom: '2px' }}>{c.detail}</p>
+                    <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)' }}>{c.sub}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">อีเมล</label>
-              <input type="email" className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="example@email.com" />
+
+            {/* Form */}
+            <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', padding: '40px 36px' }}>
+              <h2 style={{ fontFamily: 'Raleway, sans-serif', fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '28px', letterSpacing: '-0.02em' }}>ส่งข้อความหาเรา</h2>
+              <form style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div>
+                    <label className="field-label">ชื่อ-นามสกุล</label>
+                    <input type="text" className="input-field" placeholder="สมชาย ใจดี" />
+                  </div>
+                  <div>
+                    <label className="field-label">อีเมล</label>
+                    <input type="email" className="input-field" placeholder="example@email.com" />
+                  </div>
+                </div>
+                <div>
+                  <label className="field-label">หัวข้อ</label>
+                  <input type="text" className="input-field" placeholder="เรื่องที่ต้องการติดต่อ" />
+                </div>
+                <div>
+                  <label className="field-label">ข้อความ</label>
+                  <textarea
+                    rows={5}
+                    className="input-field"
+                    placeholder="รายละเอียด..."
+                    style={{ resize: 'none', height: 'auto' }}
+                  />
+                </div>
+                <button type="submit" className="btn-primary" style={{ justifyContent: 'center', padding: '14px' }}>
+                  ส่งข้อความ
+                </button>
+              </form>
             </div>
+
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">หัวข้อ</label>
-            <input type="text" className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เรื่องที่ต้องการติดต่อ" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">ข้อความ</label>
-            <textarea rows={5} className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" placeholder="รายละเอียด..." />
-          </div>
-          <button type="submit" className="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors">
-            ส่งข้อความ
-          </button>
-        </form>
-      </div>
+        </div>
+      </section>
     </div>
   )
 }

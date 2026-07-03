@@ -15,13 +15,13 @@ interface Rental {
   vehicleId: { brand: string; model: string; year: number; images: string[] }
 }
 
-const statusLabel: Record<string, { text: string; cls: string }> = {
-  pending:   { text: 'รอยืนยัน',   cls: 'bg-yellow-100 text-yellow-700' },
-  confirmed: { text: 'ยืนยันแล้ว', cls: 'bg-blue-100 text-blue-700' },
-  active:    { text: 'กำลังเช่า',  cls: 'bg-green-100 text-green-700' },
-  completed: { text: 'เสร็จสิ้น',  cls: 'bg-gray-100 text-gray-600' },
-  cancelled: { text: 'ยกเลิก',     cls: 'bg-red-100 text-red-500' },
-  overdue:   { text: 'เกินกำหนด', cls: 'bg-orange-100 text-orange-700' },
+const statusConfig: Record<string, { text: string; color: string; bg: string }> = {
+  pending:   { text: 'รอยืนยัน',   color: '#F5A623', bg: 'rgba(245,166,35,0.12)' },
+  confirmed: { text: 'ยืนยันแล้ว', color: '#60A5FA', bg: 'rgba(96,165,250,0.12)' },
+  active:    { text: 'กำลังเช่า',  color: '#6EE08A', bg: 'rgba(110,224,138,0.12)' },
+  completed: { text: 'เสร็จสิ้น',  color: '#A09FA6', bg: 'rgba(160,159,166,0.12)' },
+  cancelled: { text: 'ยกเลิก',     color: '#F87171', bg: 'rgba(248,113,113,0.12)' },
+  overdue:   { text: 'เกินกำหนด', color: '#FB923C', bg: 'rgba(251,146,60,0.12)' },
 }
 
 export default function CustomerBookingsPage() {
@@ -60,63 +60,113 @@ export default function CustomerBookingsPage() {
 
   const fmt = (d: string) => new Date(d).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })
 
-  if (status === 'loading' || loading) return <div className="text-center py-20 text-gray-400">กำลังโหลด...</div>
+  if (status === 'loading' || loading) {
+    return (
+      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-muted)' }}>กำลังโหลด...</span>
+      </div>
+    )
+  }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">ประวัติการจอง</h1>
-        <Link href="/customer/dashboard" className="text-sm text-blue-600 hover:underline">← แดชบอร์ด</Link>
-      </div>
-
-      {msg && (
-        <div className={`px-4 py-3 rounded-lg mb-6 text-sm ${msg.includes('สำเร็จ') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'}`}>
-          {msg}
+    <div style={{ minHeight: '80vh', paddingTop: '48px', paddingBottom: '80px' }}>
+      <div className="container">
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '40px' }}>
+          <div>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '8px' }}>My Bookings</p>
+            <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 900, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>ประวัติการจอง</h1>
+          </div>
+          <Link href="/customer/dashboard" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
+            ← แดชบอร์ด
+          </Link>
         </div>
-      )}
 
-      {rentals.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border">
-          <p className="text-5xl mb-4">📋</p>
-          <p className="text-lg text-gray-500 mb-2">ยังไม่มีประวัติการจอง</p>
-          <Link href="/vehicles" className="text-blue-600 hover:underline text-sm">จองรถเลย →</Link>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {rentals.map((r) => {
-            const s = statusLabel[r.status] ?? { text: r.status, cls: 'bg-gray-100 text-gray-600' }
-            const canCancel = ['pending', 'confirmed'].includes(r.status)
-            return (
-              <div key={r._id} className="bg-white rounded-2xl border p-6 shadow-sm">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <p className="font-semibold text-gray-800 text-lg">
-                        {r.vehicleId?.brand} {r.vehicleId?.model} ({r.vehicleId?.year})
+        {/* Message */}
+        {msg && (
+          <div style={{
+            padding: '12px 16px',
+            borderRadius: '10px',
+            marginBottom: '24px',
+            background: msg.includes('สำเร็จ') ? 'rgba(110,224,138,0.1)' : 'rgba(248,113,113,0.1)',
+            border: `1px solid ${msg.includes('สำเร็จ') ? 'rgba(110,224,138,0.2)' : 'rgba(248,113,113,0.2)'}`,
+          }}>
+            <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: msg.includes('สำเร็จ') ? '#6EE08A' : '#F87171' }}>{msg}</p>
+          </div>
+        )}
+
+        {rentals.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '64px 24px', background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)' }}>
+            <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '48px', color: 'var(--text-muted)', marginBottom: '16px' }}>◎</div>
+            <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '16px', color: 'var(--text-secondary)', marginBottom: '8px' }}>ยังไม่มีประวัติการจอง</p>
+            <Link href="/vehicles" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--accent)', textDecoration: 'none' }}>จองรถเลย →</Link>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {rentals.map((r) => {
+              const s = statusConfig[r.status] ?? { text: r.status, color: 'var(--text-muted)', bg: 'var(--bg-elevated)' }
+              const canCancel = ['pending', 'confirmed'].includes(r.status)
+              return (
+                <div key={r._id} style={{
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-card)',
+                  padding: '24px 28px',
+                  transition: 'border-color 0.2s',
+                }}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border-accent)')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
+                    <div style={{ flex: 1, minWidth: '200px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                        <p style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text-primary)' }}>
+                          {r.vehicleId?.brand} {r.vehicleId?.model} ({r.vehicleId?.year})
+                        </p>
+                        <span style={{ padding: '3px 10px', borderRadius: '20px', background: s.bg, fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em', color: s.color }}>
+                          {s.text}
+                        </span>
+                      </div>
+                      <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                        {fmt(r.startDate)} — {fmt(r.endDate)}
                       </p>
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${s.cls}`}>{s.text}</span>
+                      <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)' }}>
+                        รหัส: <span style={{ fontFamily: 'Raleway, sans-serif', letterSpacing: '0.05em' }}>{r.rentalCode}</span>
+                      </p>
                     </div>
-                    <p className="text-sm text-gray-500 mb-1">รหัส: <span className="font-mono text-blue-600">{r.rentalCode}</span></p>
-                    <p className="text-sm text-gray-500">{fmt(r.startDate)} — {fmt(r.endDate)}</p>
-                  </div>
-                  <div className="flex flex-col items-end gap-3">
-                    <p className="text-blue-700 font-bold text-xl">฿{r.totalPrice.toLocaleString()}</p>
-                    {canCancel && (
-                      <button
-                        onClick={() => handleCancel(r._id)}
-                        disabled={cancelling === r._id}
-                        className="text-xs px-3 py-1.5 border border-red-300 text-red-500 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
-                      >
-                        {cancelling === r._id ? 'กำลังยกเลิก...' : 'ยกเลิกการจอง'}
-                      </button>
-                    )}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}>
+                      <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '22px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.02em' }}>
+                        ฿{r.totalPrice.toLocaleString()}
+                      </p>
+                      {canCancel && (
+                        <button
+                          onClick={() => handleCancel(r._id)}
+                          disabled={cancelling === r._id}
+                          style={{
+                            padding: '6px 16px',
+                            border: '1px solid rgba(248,113,113,0.3)',
+                            borderRadius: '8px',
+                            background: 'transparent',
+                            color: '#F87171',
+                            fontFamily: 'Sarabun, sans-serif',
+                            fontSize: '13px',
+                            cursor: 'pointer',
+                            opacity: cancelling === r._id ? 0.5 : 1,
+                            transition: 'all 0.2s',
+                          }}
+                        >
+                          {cancelling === r._id ? 'กำลังยกเลิก...' : 'ยกเลิกการจอง'}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
+              )
+            })}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

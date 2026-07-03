@@ -30,7 +30,6 @@ export default function VehiclesPage() {
     const params = new URLSearchParams({ page: String(page), limit: '12' })
     if (brand) params.set('brand', brand)
     if (transmission) params.set('transmission', transmission)
-
     const res = await fetch(`/api/vehicles?${params}`)
     const data = await res.json()
     setVehicles(data.vehicles || [])
@@ -38,103 +37,148 @@ export default function VehiclesPage() {
     setLoading(false)
   }, [page, brand, transmission])
 
-  useEffect(() => {
-    fetchVehicles()
-  }, [fetchVehicles])
+  useEffect(() => { fetchVehicles() }, [fetchVehicles])
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">รถยนต์ทั้งหมด</h1>
-      <p className="text-gray-500 mb-8">เลือกรถที่ใช่สำหรับคุณ</p>
-
-      {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-8">
-        <input
-          type="text"
-          placeholder="ค้นหายี่ห้อรถ..."
-          value={brand}
-          onChange={(e) => { setBrand(e.target.value); setPage(1) }}
-          className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
-        />
-        <select
-          value={transmission}
-          onChange={(e) => { setTransmission(e.target.value); setPage(1) }}
-          className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">เกียร์ทั้งหมด</option>
-          <option value="automatic">เกียร์ออโต้</option>
-          <option value="manual">เกียร์ธรรมดา</option>
-        </select>
-      </div>
-
-      {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="rounded-2xl bg-gray-200 animate-pulse h-72" />
-          ))}
+    <div style={{ minHeight: '80vh', paddingTop: '48px', paddingBottom: '80px' }}>
+      <div className="container">
+        {/* Header */}
+        <div style={{ marginBottom: '48px' }}>
+          <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '10px' }}>Fleet</p>
+          <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, letterSpacing: '-0.03em', color: 'var(--text-primary)', marginBottom: '10px' }}>รถยนต์ทั้งหมด</h1>
+          <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '16px', color: 'var(--text-secondary)' }}>เลือกรถที่ใช่สำหรับทุกการเดินทาง</p>
         </div>
-      ) : vehicles.length === 0 ? (
-        <div className="text-center py-20 text-gray-500">
-          <p className="text-5xl mb-4">🚗</p>
-          <p className="text-xl">ไม่พบรถที่ค้นหา</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {vehicles.map((v) => (
-            <VehicleCard key={v._id} vehicle={v} />
-          ))}
-        </div>
-      )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex justify-center gap-2 mt-10">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              onClick={() => setPage(p)}
-              className={`w-10 h-10 rounded-lg font-medium transition-colors ${
-                p === page ? 'bg-blue-600 text-white' : 'bg-white border text-gray-600 hover:bg-gray-50'
-              }`}
+        {/* Filters */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '40px', padding: '20px 24px', background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)' }}>
+          <div style={{ flex: '1 1 200px' }}>
+            <label className="field-label">ยี่ห้อรถ</label>
+            <input
+              type="text"
+              placeholder="ค้นหายี่ห้อ..."
+              value={brand}
+              onChange={(e) => { setBrand(e.target.value); setPage(1) }}
+              className="input-field"
+              style={{ padding: '10px 14px' }}
+            />
+          </div>
+          <div style={{ flex: '1 1 160px' }}>
+            <label className="field-label">ประเภทเกียร์</label>
+            <select
+              value={transmission}
+              onChange={(e) => { setTransmission(e.target.value); setPage(1) }}
+              className="input-field"
+              style={{ padding: '10px 14px' }}
             >
-              {p}
-            </button>
-          ))}
+              <option value="">ทั้งหมด</option>
+              <option value="automatic">เกียร์ออโต้</option>
+              <option value="manual">เกียร์ธรรมดา</option>
+            </select>
+          </div>
         </div>
-      )}
+
+        {/* Grid */}
+        {loading ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} style={{ borderRadius: 'var(--radius-card)', background: 'var(--bg-secondary)', height: '320px', animation: 'pulse 1.5s ease-in-out infinite' }} />
+            ))}
+          </div>
+        ) : vehicles.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '80px 24px' }}>
+            <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '48px', color: 'var(--text-muted)', marginBottom: '16px' }}>◎</div>
+            <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '18px', color: 'var(--text-secondary)' }}>ไม่พบรถที่ค้นหา</p>
+          </div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+            {vehicles.map((v) => <VehicleCard key={v._id} vehicle={v} />)}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '48px' }}>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPage(p)}
+                style={{
+                  width: '40px', height: '40px',
+                  borderRadius: '8px',
+                  border: p === page ? 'none' : '1px solid var(--border)',
+                  background: p === page ? 'var(--accent)' : 'transparent',
+                  color: p === page ? 'var(--bg-primary)' : 'var(--text-secondary)',
+                  fontFamily: 'Raleway, sans-serif',
+                  fontWeight: 700, fontSize: '14px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
 
 function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
   const fuelLabel: Record<string, string> = { gasoline: 'เบนซิน', diesel: 'ดีเซล', hybrid: 'ไฮบริด', electric: 'ไฟฟ้า' }
+
   return (
-    <Link href={`/vehicles/${vehicle._id}`} className="group block bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 overflow-hidden">
-      <div className="h-44 bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center">
+    <Link href={`/vehicles/${vehicle._id}`} className="card" style={{ textDecoration: 'none', display: 'block', overflow: 'hidden' }}>
+      {/* Image */}
+      <div style={{ height: '180px', background: 'var(--bg-elevated)', overflow: 'hidden', position: 'relative' }}>
         {vehicle.images?.[0] ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={vehicle.images[0]} alt={vehicle.model} className="h-full w-full object-cover" />
+          <img src={vehicle.images[0]} alt={vehicle.model} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
+            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
+            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+          />
         ) : (
-          <span className="text-6xl">🚗</span>
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, var(--bg-elevated), var(--bg-secondary))' }}>
+            <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '48px', color: 'var(--text-muted)' }}>◎</span>
+          </div>
+        )}
+        {/* Status badge */}
+        {vehicle.status === 'available' && (
+          <div style={{ position: 'absolute', top: '12px', right: '12px', padding: '4px 10px', background: 'rgba(13,13,20,0.8)', backdropFilter: 'blur(8px)', border: '1px solid rgba(100,220,100,0.3)', borderRadius: '20px' }}>
+            <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', color: '#6EE08A' }}>AVAILABLE</span>
+          </div>
         )}
       </div>
-      <div className="p-4">
-        <h3 className="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+
+      {/* Content */}
+      <div style={{ padding: '20px' }}>
+        <h3 style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text-primary)', marginBottom: '4px' }}>
           {vehicle.brand} {vehicle.model}
         </h3>
-        <p className="text-sm text-gray-400 mb-3">{vehicle.year} • {vehicle.color}</p>
-        <div className="flex gap-2 flex-wrap mb-3">
-          <span className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded-full">{vehicle.seats} ที่นั่ง</span>
-          <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
-            {vehicle.transmission === 'automatic' ? 'ออโต้' : 'ธรรมดา'}
-          </span>
-          <span className="text-xs px-2 py-1 bg-green-50 text-green-600 rounded-full">
-            {fuelLabel[vehicle.fuelType] || vehicle.fuelType}
-          </span>
-        </div>
-        <p className="text-blue-600 font-bold text-lg">
-          ฿{vehicle.pricePerDay.toLocaleString()}<span className="text-sm font-normal text-gray-400">/วัน</span>
+        <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', marginBottom: '14px' }}>
+          {vehicle.year} · {vehicle.color}
         </p>
+
+        {/* Tags */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
+          {[
+            `${vehicle.seats} ที่นั่ง`,
+            vehicle.transmission === 'automatic' ? 'ออโต้' : 'ธรรมดา',
+            fuelLabel[vehicle.fuelType] || vehicle.fuelType,
+          ].map((tag) => (
+            <span key={tag} style={{ padding: '3px 10px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)' }}>
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Price */}
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+          <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '22px', fontWeight: 900, color: 'var(--accent)' }}>
+            ฿{vehicle.pricePerDay.toLocaleString()}
+          </span>
+          <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>/วัน</span>
+        </div>
       </div>
     </Link>
   )

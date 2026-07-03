@@ -19,7 +19,7 @@ interface Profile {
 }
 
 export default function CustomerProfilePage() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const router = useRouter()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
@@ -50,95 +50,106 @@ export default function CustomerProfilePage() {
     setMsg(res.ok ? 'บันทึกข้อมูลสำเร็จ' : 'เกิดข้อผิดพลาด')
   }
 
-  if (status === 'loading' || loading) return <div className="text-center py-20 text-gray-400">กำลังโหลด...</div>
-  if (!profile) return <div className="text-center py-20 text-gray-500">ไม่พบข้อมูล</div>
+  if (status === 'loading' || loading) return (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-muted)' }}>กำลังโหลด...</span>
+    </div>
+  )
+  if (!profile) return (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-secondary)' }}>ไม่พบข้อมูล</span>
+    </div>
+  )
+
+  const Field = ({ label, fieldKey, type = 'text', placeholder, disabled = false }: {
+    label: string; fieldKey: keyof Profile; type?: string; placeholder?: string; disabled?: boolean
+  }) => (
+    <div>
+      <label className="field-label">{label}</label>
+      <input
+        type={type}
+        value={profile[fieldKey] ?? ''}
+        onChange={(e) => !disabled && setProfile({ ...profile, [fieldKey]: e.target.value })}
+        disabled={disabled}
+        placeholder={placeholder}
+        className="input-field"
+        style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? 'not-allowed' : 'text' }}
+      />
+    </div>
+  )
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">ข้อมูลส่วนตัว</h1>
-        <Link href="/customer/dashboard" className="text-sm text-blue-600 hover:underline">← แดชบอร์ด</Link>
+    <div style={{ minHeight: '80vh', paddingTop: '48px', paddingBottom: '80px' }}>
+      <div className="container" style={{ maxWidth: '640px' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '40px' }}>
+          <div>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '8px' }}>Account</p>
+            <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 900, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>ข้อมูลส่วนตัว</h1>
+          </div>
+          <Link href="/customer/dashboard" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none' }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
+            ← แดชบอร์ด
+          </Link>
+        </div>
+
+        {msg && (
+          <div style={{
+            padding: '12px 16px', borderRadius: '10px', marginBottom: '24px',
+            background: msg.includes('สำเร็จ') ? 'rgba(110,224,138,0.1)' : 'rgba(248,113,113,0.1)',
+            border: `1px solid ${msg.includes('สำเร็จ') ? 'rgba(110,224,138,0.2)' : 'rgba(248,113,113,0.2)'}`,
+          }}>
+            <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: msg.includes('สำเร็จ') ? '#6EE08A' : '#F87171' }}>{msg}</p>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', padding: '40px 36px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Personal info */}
+          <div>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '16px' }}>ข้อมูลส่วนตัว</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <Field label="ชื่อ" fieldKey="firstName" />
+                <Field label="นามสกุล" fieldKey="lastName" />
+              </div>
+              <Field label="อีเมล" fieldKey="email" type="email" disabled />
+              <Field label="เบอร์โทรศัพท์" fieldKey="phone" type="tel" placeholder="08X-XXX-XXXX" />
+            </div>
+          </div>
+
+          {/* Documents */}
+          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '16px' }}>เอกสาร</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <Field label="เลขบัตรประชาชน" fieldKey="idCardNumber" disabled />
+              <Field label="เลขใบขับขี่" fieldKey="drivingLicenseNumber" disabled />
+            </div>
+          </div>
+
+          {/* Address */}
+          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '16px' }}>ที่อยู่</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <Field label="ที่อยู่" fieldKey="address" placeholder="บ้านเลขที่ ถนน ซอย" />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 100px', gap: '12px' }}>
+                <Field label="เมือง/อำเภอ" fieldKey="city" placeholder="กรุงเทพมหานคร" />
+                <Field label="จังหวัด" fieldKey="province" placeholder="กรุงเทพมหานคร" />
+                <Field label="รหัสไปรษณีย์" fieldKey="postalCode" placeholder="10200" />
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={saving}
+            className="btn-primary"
+            style={{ justifyContent: 'center', padding: '14px', marginTop: '8px', opacity: saving ? 0.7 : 1 }}
+          >
+            {saving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
+          </button>
+        </form>
       </div>
-
-      {msg && (
-        <div className={`px-4 py-3 rounded-lg mb-6 text-sm ${msg.includes('สำเร็จ') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'}`}>
-          {msg}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border p-8 shadow-sm space-y-5">
-        <div className="grid grid-cols-2 gap-5">
-          {[
-            { label: 'ชื่อ', key: 'firstName' },
-            { label: 'นามสกุล', key: 'lastName' },
-          ].map(({ label, key }) => (
-            <div key={key}>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-              <input
-                type="text"
-                value={profile[key as keyof Profile] ?? ''}
-                onChange={(e) => setProfile({ ...profile, [key]: e.target.value })}
-                className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          ))}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">อีเมล</label>
-          <input type="email" value={profile.email} disabled
-            className="w-full px-4 py-3 border rounded-xl bg-gray-50 text-gray-400 cursor-not-allowed" />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์</label>
-          <input type="tel" value={profile.phone ?? ''}
-            onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-            className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        </div>
-
-        <div className="grid grid-cols-2 gap-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">เลขบัตรประชาชน</label>
-            <input type="text" value={profile.idCardNumber} disabled
-              className="w-full px-4 py-3 border rounded-xl bg-gray-50 text-gray-400 cursor-not-allowed" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">เลขใบขับขี่</label>
-            <input type="text" value={profile.drivingLicenseNumber} disabled
-              className="w-full px-4 py-3 border rounded-xl bg-gray-50 text-gray-400 cursor-not-allowed" />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">ที่อยู่</label>
-          <input type="text" value={profile.address ?? ''}
-            onChange={(e) => setProfile({ ...profile, address: e.target.value })}
-            placeholder="บ้านเลขที่ ถนน ซอย"
-            className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            { label: 'เมือง/อำเภอ', key: 'city', placeholder: 'กรุงเทพมหานคร' },
-            { label: 'จังหวัด', key: 'province', placeholder: 'กรุงเทพมหานคร' },
-            { label: 'รหัสไปรษณีย์', key: 'postalCode', placeholder: '10200' },
-          ].map(({ label, key, placeholder }) => (
-            <div key={key}>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-              <input type="text" value={profile[key as keyof Profile] ?? ''}
-                onChange={(e) => setProfile({ ...profile, [key]: e.target.value })}
-                placeholder={placeholder}
-                className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-          ))}
-        </div>
-
-        <button type="submit" disabled={saving}
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-60">
-          {saving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
-        </button>
-      </form>
     </div>
   )
 }

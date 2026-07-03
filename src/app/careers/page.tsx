@@ -1,39 +1,70 @@
+'use client'
+
 import Link from 'next/link'
 
-export default function CareersPage() {
-  const jobs = [
-    { title: 'พนักงานดูแลลูกค้า (Customer Service)', type: 'Full-time', location: 'กรุงเทพฯ' },
-    { title: 'พนักงานตรวจสภาพรถ', type: 'Full-time', location: 'กรุงเทพฯ / เชียงใหม่' },
-    { title: 'นักพัฒนาซอฟต์แวร์ (Full Stack)', type: 'Full-time', location: 'Remote' },
-    { title: 'พนักงานการตลาดออนไลน์', type: 'Full-time', location: 'กรุงเทพฯ' },
-  ]
+const jobs = [
+  { title: 'พนักงานดูแลลูกค้า (Customer Service)', type: 'Full-time', location: 'กรุงเทพฯ' },
+  { title: 'พนักงานตรวจสภาพรถ', type: 'Full-time', location: 'กรุงเทพฯ / เชียงใหม่' },
+  { title: 'นักพัฒนาซอฟต์แวร์ (Full Stack)', type: 'Full-time', location: 'Remote' },
+  { title: 'พนักงานการตลาดออนไลน์', type: 'Full-time', location: 'กรุงเทพฯ' },
+]
 
+export default function CareersPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">ร่วมงานกับเรา</h1>
-      <p className="text-gray-500 mb-10">มาเป็นส่วนหนึ่งของทีม CarRent ที่กำลังเติบโต</p>
-      <div className="space-y-4 mb-12">
-        {jobs.map((j) => (
-          <div key={j.title} className="bg-white rounded-2xl border p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h2 className="font-semibold text-gray-800 mb-1">{j.title}</h2>
-              <div className="flex gap-3 text-sm text-gray-500">
-                <span>🏢 {j.type}</span>
-                <span>📍 {j.location}</span>
+    <div style={{ paddingBottom: '80px' }}>
+      <section style={{ paddingTop: '64px', paddingBottom: '64px', borderBottom: '1px solid var(--border)' }}>
+        <div className="container">
+          <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>Careers</p>
+          <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, letterSpacing: '-0.03em', color: 'var(--text-primary)', marginBottom: '16px' }}>ร่วมงานกับเรา</h1>
+          <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '17px', color: 'var(--text-secondary)' }}>มาเป็นส่วนหนึ่งของทีม CarRent ที่กำลังเติบโต</p>
+        </div>
+      </section>
+
+      <section style={{ paddingTop: '64px' }}>
+        <div className="container">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '48px' }}>
+            {jobs.map((j, i) => (
+              <div key={j.title} style={{
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-card)',
+                padding: '24px 28px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '16px',
+                transition: 'border-color 0.2s',
+              }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border-accent)')}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}>
+                <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start', flex: 1 }}>
+                  <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 900, letterSpacing: '0.1em', color: 'var(--accent)', paddingTop: '2px' }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <div>
+                    <h2 style={{ fontFamily: 'Raleway, sans-serif', fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>{j.title}</h2>
+                    <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                      <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>{j.type}</span>
+                      <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>{j.location}</span>
+                    </div>
+                  </div>
+                </div>
+                <Link href="/contact" className="btn-outline" style={{ padding: '8px 20px', fontSize: '13px', whiteSpace: 'nowrap' }}>
+                  สมัครงาน
+                </Link>
               </div>
-            </div>
-            <Link href="/contact" className="text-sm px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap">
-              สมัครงาน
-            </Link>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="bg-blue-50 rounded-2xl p-8 text-center">
-        <p className="text-gray-600 mb-4">ไม่เห็นตำแหน่งที่ใช่? ส่ง resume มาได้เลย</p>
-        <Link href="/contact" className="inline-block px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium">
-          ติดต่อฝ่าย HR
-        </Link>
-      </div>
+
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-accent)', borderRadius: 'var(--radius-card)', padding: '48px', textAlign: 'center' }}>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>Open Application</p>
+            <h2 style={{ fontFamily: 'Raleway, sans-serif', fontSize: '22px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '10px', letterSpacing: '-0.02em' }}>ไม่เห็นตำแหน่งที่ใช่?</h2>
+            <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '15px', color: 'var(--text-secondary)', marginBottom: '28px' }}>ส่ง resume มาได้เลย เราติดต่อกลับเมื่อมีตำแหน่งที่เหมาะสม</p>
+            <Link href="/contact" className="btn-primary">ติดต่อฝ่าย HR</Link>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

@@ -19,7 +19,7 @@ interface Vehicle {
 export function BookingCreateForm() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const vehicleId = searchParams.get('vehicleId')
 
   const [vehicle, setVehicle] = useState<Vehicle | null>(null)
@@ -44,9 +44,7 @@ export function BookingCreateForm() {
 
   const calcPrice = () => {
     if (!vehicle || !startDate || !endDate) return 0
-    const start = new Date(startDate)
-    const end = new Date(endDate)
-    const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+    const days = Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24))
     if (days < 1) return 0
     if (days >= 30) return Math.ceil(days / 30) * vehicle.pricePerMonth
     if (days >= 7) return Math.ceil(days / 7) * vehicle.pricePerWeek
@@ -71,114 +69,97 @@ export function BookingCreateForm() {
   const totalPrice = calcPrice()
   const today = new Date().toISOString().split('T')[0]
 
-  if (status === 'loading') return <div className="text-center py-20 text-gray-400">กำลังโหลด...</div>
+  if (status === 'loading') return (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-muted)' }}>กำลังโหลด...</span>
+    </div>
+  )
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-      <Link href={vehicleId ? `/vehicles/${vehicleId}` : '/vehicles'} className="text-blue-600 hover:underline text-sm mb-6 inline-block">
-        ← กลับ
-      </Link>
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">จองรถ</h1>
+    <div style={{ minHeight: '80vh', paddingTop: '48px', paddingBottom: '80px' }}>
+      <div className="container" style={{ maxWidth: '680px' }}>
+        <Link href={vehicleId ? `/vehicles/${vehicleId}` : '/vehicles'} style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '32px' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
+          ← กลับ
+        </Link>
 
-      {vehicle && (
-        <div className="bg-blue-50 rounded-2xl p-5 mb-8 flex gap-4 items-center">
-          <div className="w-20 h-14 bg-gray-200 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center">
-            {vehicle.images?.[0] ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={vehicle.images[0]} alt={vehicle.model} className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-3xl">🚗</span>
-            )}
-          </div>
-          <div>
-            <p className="font-semibold text-gray-800">{vehicle.brand} {vehicle.model} ({vehicle.year})</p>
-            <p className="text-sm text-blue-600">฿{vehicle.pricePerDay.toLocaleString()}/วัน</p>
-          </div>
-        </div>
-      )}
-
-      {error && <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg mb-6">{error}</div>}
-
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-2xl shadow-sm border p-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">วันรับรถ</label>
-            <input
-              type="date"
-              value={startDate}
-              min={today}
-              onChange={(e) => setStartDate(e.target.value)}
-              required
-              className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">วันคืนรถ</label>
-            <input
-              type="date"
-              value={endDate}
-              min={startDate || today}
-              onChange={(e) => setEndDate(e.target.value)}
-              required
-              className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+        <div style={{ marginBottom: '36px' }}>
+          <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '8px' }}>Booking</p>
+          <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 900, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>จองรถ</h1>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">สถานที่รับรถ</label>
-          <input
-            type="text"
-            value={pickupLocation}
-            onChange={(e) => setPickupLocation(e.target.value)}
-            placeholder="ระบุสถานที่รับรถ"
-            className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">สถานที่คืนรถ</label>
-          <input
-            type="text"
-            value={returnLocation}
-            onChange={(e) => setReturnLocation(e.target.value)}
-            placeholder="ระบุสถานที่คืนรถ (ถ้าต่างจากรับรถ)"
-            className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">หมายเหตุ</label>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={3}
-            placeholder="ข้อมูลเพิ่มเติม..."
-            className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-          />
-        </div>
-
-        {totalPrice > 0 && (
-          <div className="bg-gray-50 rounded-xl p-4 border">
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
-              <span>ราคารวมโดยประมาณ</span>
-              <span className="font-bold text-lg text-blue-700">฿{totalPrice.toLocaleString()}</span>
+        {/* Selected vehicle */}
+        {vehicle && (
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-accent)', borderRadius: 'var(--radius-card)', padding: '20px 24px', marginBottom: '28px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <div style={{ width: '72px', height: '52px', borderRadius: '8px', overflow: 'hidden', background: 'var(--bg-elevated)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {vehicle.images?.[0] ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={vehicle.images[0]} alt={vehicle.model} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '24px', color: 'var(--text-muted)' }}>◎</span>
+              )}
             </div>
-            <div className="flex justify-between text-sm text-gray-500">
-              <span>มัดจำ (30%)</span>
-              <span>฿{Math.round(totalPrice * 0.3).toLocaleString()}</span>
+            <div>
+              <p style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text-primary)' }}>{vehicle.brand} {vehicle.model} ({vehicle.year})</p>
+              <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--accent)', marginTop: '2px' }}>฿{vehicle.pricePerDay.toLocaleString()}/วัน</p>
             </div>
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-60 text-lg"
-        >
-          {loading ? 'กำลังส่งคำขอ...' : 'ยืนยันการจอง'}
-        </button>
-      </form>
+        {error && (
+          <div style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: '10px', padding: '12px 16px', marginBottom: '20px' }}>
+            <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: '#F87171' }}>{error}</p>
+          </div>
+        )}
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', padding: '36px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div>
+              <label className="field-label">วันรับรถ</label>
+              <input type="date" value={startDate} min={today} onChange={e => setStartDate(e.target.value)} required className="input-field" />
+            </div>
+            <div>
+              <label className="field-label">วันคืนรถ</label>
+              <input type="date" value={endDate} min={startDate || today} onChange={e => setEndDate(e.target.value)} required className="input-field" />
+            </div>
+          </div>
+
+          <div>
+            <label className="field-label">สถานที่รับรถ</label>
+            <input type="text" value={pickupLocation} onChange={e => setPickupLocation(e.target.value)} placeholder="ระบุสถานที่รับรถ" className="input-field" />
+          </div>
+
+          <div>
+            <label className="field-label">สถานที่คืนรถ</label>
+            <input type="text" value={returnLocation} onChange={e => setReturnLocation(e.target.value)} placeholder="ระบุสถานที่คืนรถ (ถ้าต่างจากรับรถ)" className="input-field" />
+          </div>
+
+          <div>
+            <label className="field-label">หมายเหตุ</label>
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3} placeholder="ข้อมูลเพิ่มเติม..." className="input-field" style={{ resize: 'none', height: 'auto' }} />
+          </div>
+
+          {/* Price summary */}
+          {totalPrice > 0 && (
+            <div style={{ background: 'var(--bg-primary)', border: '1px solid var(--border-accent)', borderRadius: '12px', padding: '20px 24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
+                <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-secondary)' }}>ราคารวมโดยประมาณ</span>
+                <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '26px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.02em' }}>฿{totalPrice.toLocaleString()}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>มัดจำ 30%</span>
+                <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '13px', color: 'var(--text-secondary)' }}>฿{Math.round(totalPrice * 0.3).toLocaleString()}</span>
+              </div>
+            </div>
+          )}
+
+          <button type="submit" disabled={loading} className="btn-primary" style={{ justifyContent: 'center', padding: '16px', fontSize: '15px', marginTop: '4px', opacity: loading ? 0.7 : 1 }}>
+            {loading ? 'กำลังส่งคำขอ...' : 'ยืนยันการจอง'}
+          </button>
+        </form>
+      </div>
     </div>
   )
 }

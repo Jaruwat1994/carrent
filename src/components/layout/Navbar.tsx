@@ -2,85 +2,219 @@
 
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 export function Navbar() {
   const { data: session } = useSession()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const navLinks = [
+    { href: '/vehicles', label: 'รถทั้งหมด' },
+    { href: '/services', label: 'บริการ' },
+    { href: '/promotions', label: 'โปรโมชั่น' },
+    { href: '/about', label: 'เกี่ยวกับเรา' },
+    { href: '/contact', label: 'ติดต่อ' },
+  ]
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
-            CarRent
-          </Link>
+    <nav
+      style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        transition: 'all 0.3s ease',
+        background: scrolled
+          ? 'rgba(13,13,20,0.95)'
+          : 'transparent',
+        backdropFilter: scrolled ? 'blur(20px)' : 'none',
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.07)' : '1px solid transparent',
+      }}
+    >
+      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '70px' }}>
+        {/* Logo */}
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{
+            fontFamily: 'Raleway, sans-serif',
+            fontWeight: 900,
+            fontSize: '22px',
+            color: 'var(--accent)',
+            letterSpacing: '-0.03em',
+          }}>CAR</span>
+          <span style={{
+            fontFamily: 'Raleway, sans-serif',
+            fontWeight: 300,
+            fontSize: '22px',
+            color: 'var(--text-primary)',
+            letterSpacing: '0.08em',
+          }}>RENT</span>
+        </Link>
 
-          {/* Desktop menu */}
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
-            <Link href="/vehicles" className="hover:text-blue-600 transition-colors">รถทั้งหมด</Link>
-            <Link href="/services" className="hover:text-blue-600 transition-colors">บริการ</Link>
-            <Link href="/promotions" className="hover:text-blue-600 transition-colors">โปรโมชั่น</Link>
-            <Link href="/about" className="hover:text-blue-600 transition-colors">เกี่ยวกับเรา</Link>
-            <Link href="/contact" className="hover:text-blue-600 transition-colors">ติดต่อ</Link>
-          </div>
-
-          {/* Auth buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            {session ? (
-              <div className="flex items-center gap-3">
-                <Link href="/customer/dashboard" className="text-sm text-gray-700 hover:text-blue-600">
-                  สวัสดี, {session.user?.name?.split(' ')[0]}
-                </Link>
-                <button
-                  onClick={() => signOut({ callbackUrl: '/' })}
-                  className="px-4 py-2 text-sm text-gray-600 border rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  ออกจากระบบ
-                </button>
-              </div>
-            ) : (
-              <>
-                <Link href="/login" className="px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
-                  เข้าสู่ระบบ
-                </Link>
-                <Link href="/register" className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
-                  สมัครสมาชิก
-                </Link>
-              </>
-            )}
-          </div>
-
-          {/* Mobile burger */}
-          <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}>
-            <span className="block w-6 h-0.5 bg-gray-600 mb-1" />
-            <span className="block w-6 h-0.5 bg-gray-600 mb-1" />
-            <span className="block w-6 h-0.5 bg-gray-600" />
-          </button>
+        {/* Desktop nav */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }} className="desktop-nav">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              style={{
+                fontFamily: 'Sarabun, sans-serif',
+                fontSize: '14px',
+                fontWeight: 500,
+                color: pathname === link.href ? 'var(--accent)' : 'var(--text-secondary)',
+                textDecoration: 'none',
+                transition: 'color 0.2s',
+                letterSpacing: '0.01em',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-primary)')}
+              onMouseLeave={e => (e.currentTarget.style.color = pathname === link.href ? 'var(--accent)' : 'var(--text-secondary)')}
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
-      </div>
 
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-white border-t px-4 py-4 space-y-3 text-sm font-medium text-gray-700">
-          <Link href="/vehicles" className="block hover:text-blue-600" onClick={() => setMenuOpen(false)}>รถทั้งหมด</Link>
-          <Link href="/services" className="block hover:text-blue-600" onClick={() => setMenuOpen(false)}>บริการ</Link>
-          <Link href="/promotions" className="block hover:text-blue-600" onClick={() => setMenuOpen(false)}>โปรโมชั่น</Link>
-          <Link href="/about" className="block hover:text-blue-600" onClick={() => setMenuOpen(false)}>เกี่ยวกับเรา</Link>
-          <Link href="/contact" className="block hover:text-blue-600" onClick={() => setMenuOpen(false)}>ติดต่อ</Link>
+        {/* Auth */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }} className="desktop-nav">
           {session ? (
             <>
-              <Link href="/customer/dashboard" className="block hover:text-blue-600" onClick={() => setMenuOpen(false)}>แดชบอร์ด</Link>
-              <button onClick={() => { signOut({ callbackUrl: '/' }); setMenuOpen(false) }} className="block text-red-500">ออกจากระบบ</button>
+              <Link href="/customer/dashboard" style={{
+                fontFamily: 'Sarabun, sans-serif',
+                fontSize: '14px',
+                color: 'var(--text-secondary)',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}>
+                <span style={{
+                  width: '32px', height: '32px',
+                  borderRadius: '50%',
+                  background: 'var(--accent-muted)',
+                  border: '1px solid var(--border-accent)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontFamily: 'Raleway, sans-serif',
+                  fontWeight: 700,
+                  fontSize: '12px',
+                  color: 'var(--accent)',
+                }}>
+                  {session.user?.name?.charAt(0).toUpperCase()}
+                </span>
+                {session.user?.name?.split(' ')[0]}
+              </Link>
+              <button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="btn-outline"
+                style={{ padding: '8px 18px', fontSize: '13px' }}
+              >
+                ออกจากระบบ
+              </button>
             </>
           ) : (
             <>
-              <Link href="/login" className="block text-blue-600" onClick={() => setMenuOpen(false)}>เข้าสู่ระบบ</Link>
-              <Link href="/register" className="block text-blue-600 font-semibold" onClick={() => setMenuOpen(false)}>สมัครสมาชิก</Link>
+              <Link href="/login" className="btn-outline" style={{ padding: '8px 20px', fontSize: '13px' }}>
+                เข้าสู่ระบบ
+              </Link>
+              <Link href="/register" className="btn-primary" style={{ padding: '8px 20px', fontSize: '13px' }}>
+                สมัครสมาชิก
+              </Link>
             </>
           )}
         </div>
-      )}
+
+        {/* Mobile burger */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="mobile-menu-btn"
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '8px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '5px',
+          }}
+        >
+          {[0, 1, 2].map((i) => (
+            <span key={i} style={{
+              display: 'block',
+              width: '22px',
+              height: '2px',
+              background: menuOpen
+                ? i === 1 ? 'transparent' : 'var(--accent)'
+                : 'var(--text-secondary)',
+              borderRadius: '2px',
+              transition: 'all 0.3s ease',
+              transform: menuOpen
+                ? i === 0 ? 'rotate(45deg) translate(5px,5px)'
+                : i === 2 ? 'rotate(-45deg) translate(5px,-5px)'
+                : 'none'
+                : 'none',
+            }} />
+          ))}
+        </button>
+      </div>
+
+      {/* Mobile menu */}
+      <div style={{
+        maxHeight: menuOpen ? '400px' : '0',
+        overflow: 'hidden',
+        transition: 'max-height 0.4s ease',
+        background: 'rgba(13,13,20,0.98)',
+        backdropFilter: 'blur(20px)',
+        borderBottom: menuOpen ? '1px solid var(--border)' : 'none',
+      }}>
+        <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              style={{
+                fontFamily: 'Sarabun, sans-serif',
+                fontSize: '16px',
+                fontWeight: 500,
+                color: pathname === link.href ? 'var(--accent)' : 'var(--text-secondary)',
+                textDecoration: 'none',
+              }}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {session ? (
+              <>
+                <Link href="/customer/dashboard" onClick={() => setMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontFamily: 'Sarabun, sans-serif' }}>แดชบอร์ด</Link>
+                <button onClick={() => { signOut({ callbackUrl: '/' }); setMenuOpen(false) }} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', fontFamily: 'Sarabun, sans-serif', textAlign: 'left', cursor: 'pointer' }}>ออกจากระบบ</button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" onClick={() => setMenuOpen(false)} className="btn-outline" style={{ textAlign: 'center' }}>เข้าสู่ระบบ</Link>
+                <Link href="/register" onClick={() => setMenuOpen(false)} className="btn-primary" style={{ textAlign: 'center' }}>สมัครสมาชิก</Link>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @media (min-width: 768px) {
+          .desktop-nav { display: flex !important; }
+          .mobile-menu-btn { display: none !important; }
+        }
+        @media (max-width: 767px) {
+          .desktop-nav { display: none !important; }
+          .mobile-menu-btn { display: flex !important; }
+        }
+      `}</style>
     </nav>
   )
 }
