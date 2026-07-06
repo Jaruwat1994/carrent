@@ -16,16 +16,31 @@ interface Rental {
   vehicleId: { brand: string; model: string; year: number; color: string; images: string[] }
 }
 
+interface PaymentMethod {
+  _id: string
+  type: 'bank_transfer' | 'promptpay'
+  bankName?: string
+  accountNumber: string
+  accountName: string
+  qrCodeUrl?: string
+}
+
 export default function BookingConfirmationPage() {
   const { id } = useParams()
   const [rental, setRental] = useState<Rental | null>(null)
+  const [payments, setPayments] = useState<PaymentMethod[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!id) return
-    fetch(`/api/bookings/${id}`)
-      .then((r) => r.json())
-      .then((d) => { setRental(d.rental); setLoading(false) })
+    Promise.all([
+      fetch(`/api/bookings/${id}`).then((r) => r.json()),
+      fetch('/api/payments').then((r) => r.json()),
+    ]).then(([bookingData, paymentData]) => {
+      setRental(bookingData.rental)
+      setPayments(paymentData.methods || [])
+      setLoading(false)
+    })
   }, [id])
 
   if (loading) return (
@@ -123,6 +138,33 @@ export default function BookingConfirmationPage() {
             </div>
           </div>
         </div>
+
+        {/* Payment methods */}
+        {payments.length > 0 && (
+          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-accent)', borderRadius: 'var(--radius-card)', padding: '28px', marginBottom: '24px' }}>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '20px' }}>ช่องทางชำระเงิน</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {payments.map((pm) => (
+                <div key={pm._id} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '16px', background: 'var(--bg-elevated)', borderRadius: '10px', border: '1px solid var(--border)' }}>
+                  {pm.qrCodeUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={pm.qrCodeUrl} alt="QR" style={{ width: '80px', height: '80px', objectFit: 'contain', borderRadius: '6px', background: '#fff', padding: '4px', flexShrink: 0 }} />
+                  )}
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '6px' }}>
+                      {pm.type === 'bank_transfer' ? (pm.bankName || 'โอนธนาคาร') : 'PromptPay'}
+                    </p>
+                    <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '18px', fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '0.03em', marginBottom: '2px' }}>{pm.accountNumber}</p>
+                    <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-secondary)' }}>{pm.accountName}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', marginTop: '16px' }}>
+              กรุณาโอนมัดจำ ฿{rental.deposit.toLocaleString()} และแนบสลิปให้เจ้าหน้าที่
+            </p>
+          </div>
+        )}
 
         {/* Actions */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
