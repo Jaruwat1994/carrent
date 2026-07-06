@@ -1,0 +1,56 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="40%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#1A2A3A"/>
+      <stop offset="100%" stop-color="#0D0D14"/>
+    </radialGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#fff" stroke-width="0.5" opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+  <ellipse cx="400" cy="355" rx="275" ry="15" fill="#000" opacity="0.5"/>
+  <!-- Body -->
+  <path d="M105 285 L148 195 L230 158 L570 158 L652 195 L695 285 L695 318 L105 318 Z" fill="#E8E8EC" stroke="#D0D0D8" stroke-width="1.5"/>
+  <!-- Roof -->
+  <path d="M205 197 L248 138 L552 138 L595 197 Z" fill="#F0F0F4" stroke="#D8D8E0" stroke-width="1"/>
+  <!-- Windshield -->
+  <path d="M218 195 L255 142 L545 142 L582 195 Z" fill="#0C1E38" opacity="0.8"/>
+  <!-- Side windows -->
+  <rect x="228" y="150" width="92" height="42" rx="4" fill="#0C1E38" opacity="0.7"/>
+  <rect x="332" y="150" width="108" height="42" rx="4" fill="#0C1E38" opacity="0.7"/>
+  <rect x="452" y="150" width="90" height="42" rx="4" fill="#0C1E38" opacity="0.6"/>
+  <!-- Chrome trim -->
+  <path d="M105 285 L695 285" stroke="#C0C0C8" stroke-width="1.5" opacity="0.5"/>
+  <!-- Front wheel -->
+  <circle cx="215" cy="315" r="56" fill="#111118" stroke="#2A2A35" stroke-width="2"/>
+  <circle cx="215" cy="315" r="40" fill="#1C1C24"/>
+  <circle cx="215" cy="315" r="20" fill="#F5A623" opacity="0.85"/>
+  <line x1="215" y1="275" x2="215" y2="355" stroke="#333" stroke-width="3"/>
+  <line x1="175" y1="315" x2="255" y2="315" stroke="#333" stroke-width="3"/>
+  <line x1="187" y1="287" x2="243" y2="343" stroke="#333" stroke-width="2.5"/>
+  <line x1="187" y1="343" x2="243" y2="287" stroke="#333" stroke-width="2.5"/>
+  <!-- Rear wheel -->
+  <circle cx="585" cy="315" r="56" fill="#111118" stroke="#2A2A35" stroke-width="2"/>
+  <circle cx="585" cy="315" r="40" fill="#1C1C24"/>
+  <circle cx="585" cy="315" r="20" fill="#F5A623" opacity="0.85"/>
+  <line x1="585" y1="275" x2="585" y2="355" stroke="#333" stroke-width="3"/>
+  <line x1="545" y1="315" x2="625" y2="315" stroke="#333" stroke-width="3"/>
+  <line x1="557" y1="287" x2="613" y2="343" stroke="#333" stroke-width="2.5"/>
+  <line x1="557" y1="343" x2="613" y2="287" stroke="#333" stroke-width="2.5"/>
+  <!-- Headlight -->
+  <path d="M107 248 L148 228 L148 270 L107 270 Z" fill="#FFF8E7" opacity="0.9"/>
+  <rect x="107" y="246" width="6" height="26" fill="#FFF8E7" opacity="0.6"/>
+  <!-- Taillight -->
+  <rect x="654" y="226" width="36" height="46" rx="3" fill="#CC2200" opacity="0.9"/>
+  <rect x="657" y="229" width="14" height="40" rx="2" fill="#FF3300" opacity="0.6"/>
+  <!-- Door lines -->
+  <line x1="340" y1="160" x2="340" y2="310" stroke="#C8C8D0" stroke-width="1" opacity="0.4"/>
+  <line x1="462" y1="160" x2="462" y2="310" stroke="#C8C8D0" stroke-width="1" opacity="0.4"/>
+  <!-- Door handles -->
+  <rect x="368" y="238" width="22" height="5" rx="2.5" fill="#A0A0A8"/>
+  <rect x="490" y="238" width="22" height="5" rx="2.5" fill="#A0A0A8"/>
+  <text x="400" y="422" font-family="'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="300" fill="#555" text-anchor="middle" letter-spacing="8">SUV</text>
+  <text x="400" y="438" font-family="'Helvetica Neue', Arial, sans-serif" font-size="10" font-weight="300" fill="#333" text-anchor="middle" letter-spacing="5">CARALLCAR</text>
+</svg>

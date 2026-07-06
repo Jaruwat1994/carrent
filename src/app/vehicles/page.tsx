@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
+import { Users, Settings2, Fuel } from 'lucide-react'
+import { SkeletonCard } from '@/components/ui/Skeleton'
 
 interface Vehicle {
   _id: string
@@ -81,7 +83,7 @@ export default function VehiclesPage() {
         {loading ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} style={{ borderRadius: 'var(--radius-card)', background: 'var(--bg-secondary)', height: '320px', animation: 'pulse 1.5s ease-in-out infinite' }} />
+              <SkeletonCard key={i} />
             ))}
           </div>
         ) : vehicles.length === 0 ? (
@@ -127,32 +129,35 @@ export default function VehiclesPage() {
 function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
   const fuelLabel: Record<string, string> = { gasoline: 'เบนซิน', diesel: 'ดีเซล', hybrid: 'ไฮบริด', electric: 'ไฟฟ้า' }
 
+  const tags = [
+    { icon: <Users size={11} />, label: `${vehicle.seats} ที่นั่ง` },
+    { icon: <Settings2 size={11} />, label: vehicle.transmission === 'automatic' ? 'ออโต้' : 'ธรรมดา' },
+    { icon: <Fuel size={11} />, label: fuelLabel[vehicle.fuelType] || vehicle.fuelType },
+  ]
+
   return (
     <Link href={`/vehicles/${vehicle._id}`} className="card" style={{ textDecoration: 'none', display: 'block', overflow: 'hidden' }}>
       {/* Image */}
-      <div style={{ height: '180px', background: 'var(--bg-elevated)', overflow: 'hidden', position: 'relative' }}>
+      <div className="img-zoom-wrap" style={{ height: '180px', background: 'var(--bg-elevated)', position: 'relative' }}>
         {vehicle.images?.[0] ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={vehicle.images[0]} alt={vehicle.model} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
-            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
-            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
-          />
+          <img src={vehicle.images[0]} alt={vehicle.model} />
         ) : (
           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, var(--bg-elevated), var(--bg-secondary))' }}>
             <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '48px', color: 'var(--text-muted)' }}>◎</span>
           </div>
         )}
-        {/* Status badge */}
         {vehicle.status === 'available' && (
-          <div style={{ position: 'absolute', top: '12px', right: '12px', padding: '4px 10px', background: 'rgba(13,13,20,0.8)', backdropFilter: 'blur(8px)', border: '1px solid rgba(100,220,100,0.3)', borderRadius: '20px' }}>
-            <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', color: '#6EE08A' }}>AVAILABLE</span>
+          <div style={{ position: 'absolute', top: '12px', right: '12px', padding: '4px 10px', background: 'rgba(13,13,20,0.85)', backdropFilter: 'blur(8px)', border: '1px solid rgba(100,220,100,0.3)', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span className="pulse-dot" style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#6EE08A', display: 'block' }} />
+            <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', color: '#6EE08A' }}>พร้อมเช่า</span>
           </div>
         )}
       </div>
 
       {/* Content */}
       <div style={{ padding: '20px' }}>
-        <h3 style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text-primary)', marginBottom: '4px' }}>
+        <h3 style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text-primary)', marginBottom: '4px', transition: 'color 0.2s ease' }}>
           {vehicle.brand} {vehicle.model}
         </h3>
         <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', marginBottom: '14px' }}>
@@ -161,23 +166,22 @@ function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
 
         {/* Tags */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
-          {[
-            `${vehicle.seats} ที่นั่ง`,
-            vehicle.transmission === 'automatic' ? 'ออโต้' : 'ธรรมดา',
-            fuelLabel[vehicle.fuelType] || vehicle.fuelType,
-          ].map((tag) => (
-            <span key={tag} style={{ padding: '3px 10px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)' }}>
-              {tag}
+          {tags.map(({ icon, label }) => (
+            <span key={label} className="tag-interactive" style={{ padding: '3px 10px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              {icon}{label}
             </span>
           ))}
         </div>
 
-        {/* Price */}
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-          <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '22px', fontWeight: 900, color: 'var(--accent)' }}>
-            ฿{vehicle.pricePerDay.toLocaleString()}
-          </span>
-          <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>/วัน</span>
+        {/* Price + CTA */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+            <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '22px', fontWeight: 900, color: 'var(--accent)' }}>
+              ฿{vehicle.pricePerDay.toLocaleString()}
+            </span>
+            <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>/วัน</span>
+          </div>
+          <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--accent)', opacity: 0.7, transition: 'opacity 0.2s' }}>ดูรายละเอียด →</span>
         </div>
       </div>
     </Link>

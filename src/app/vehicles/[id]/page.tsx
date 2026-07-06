@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { ChevronLeft, MapPin, Fuel, CheckCircle } from 'lucide-react'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 interface Vehicle {
   _id: string
@@ -27,7 +29,7 @@ interface Vehicle {
 export default function VehicleDetailPage() {
   const { id } = useParams()
   const router = useRouter()
-  const { data: session } = useSession()
+  const { data: session, status: sessionStatus } = useSession()
   const [vehicle, setVehicle] = useState<Vehicle | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -39,10 +41,49 @@ export default function VehicleDetailPage() {
   }, [id])
 
   if (loading) return (
-    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-muted)' }}>กำลังโหลด...</span>
+    <div style={{ paddingTop: '48px', paddingBottom: '80px' }}>
+      <div className="container">
+        {/* Breadcrumb skeleton */}
+        <Skeleton height={14} width={160} style={{ marginBottom: '32px', borderRadius: '6px' }} />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: '48px', alignItems: 'start' }}>
+          {/* Image placeholder */}
+          <div style={{ borderRadius: 'var(--radius-card)', overflow: 'hidden', aspectRatio: '16/9', background: 'var(--bg-elevated)' }}>
+            <Skeleton height="100%" borderRadius={0} style={{ minHeight: '300px' }} />
+          </div>
+
+          {/* Info panel skeleton */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <Skeleton height={12} width={120} />
+            <Skeleton height={38} width="85%" />
+            {/* Tags row */}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <Skeleton height={28} width={80} borderRadius={20} />
+              <Skeleton height={28} width={90} borderRadius={20} />
+              <Skeleton height={28} width={70} borderRadius={20} />
+              <Skeleton height={28} width={110} borderRadius={20} />
+            </div>
+            {/* Pricing box */}
+            <Skeleton height={110} borderRadius={8} style={{ marginTop: '4px' }} />
+            {/* Description lines */}
+            <Skeleton height={14} />
+            <Skeleton height={14} width="92%" />
+            <Skeleton height={14} width="74%" />
+            {/* Features label + pills */}
+            <Skeleton height={11} width={80} />
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <Skeleton height={24} width={90} borderRadius={20} />
+              <Skeleton height={24} width={75} borderRadius={20} />
+              <Skeleton height={24} width={100} borderRadius={20} />
+            </div>
+            {/* CTA */}
+            <Skeleton height={52} style={{ marginTop: '8px', borderRadius: 'var(--radius-btn)' }} />
+          </div>
+        </div>
+      </div>
     </div>
   )
+
   if (!vehicle) return (
     <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-secondary)' }}>ไม่พบรถ</span>
@@ -56,10 +97,14 @@ export default function VehicleDetailPage() {
     <div style={{ paddingTop: '48px', paddingBottom: '80px' }}>
       <div className="container">
         {/* Breadcrumb */}
-        <Link href="/vehicles" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '32px' }}
+        <Link
+          href="/vehicles"
+          style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px', marginBottom: '32px' }}
           onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
-          ← กลับไปรายการรถ
+          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}
+        >
+          <ChevronLeft size={15} strokeWidth={2} />
+          กลับไปรายการรถ
         </Link>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: '48px', alignItems: 'start' }}>
@@ -91,16 +136,22 @@ export default function VehicleDetailPage() {
 
             {/* Tags */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>
-              {[
-                `${vehicle.seats} ที่นั่ง`,
-                vehicle.transmission === 'automatic' ? 'เกียร์ออโต้' : 'เกียร์ธรรมดา',
-                fuelLabel[vehicle.fuelType] || vehicle.fuelType,
-                ...(vehicle.location ? [`📍 ${vehicle.location}`] : []),
-              ].map((tag) => (
-                <span key={tag} style={{ padding: '5px 14px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-secondary)' }}>
-                  {tag}
+              <span style={{ padding: '5px 14px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                {vehicle.seats} ที่นั่ง
+              </span>
+              <span style={{ padding: '5px 14px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                {vehicle.transmission === 'automatic' ? 'เกียร์ออโต้' : 'เกียร์ธรรมดา'}
+              </span>
+              <span style={{ padding: '5px 14px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-secondary)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                <Fuel size={12} strokeWidth={1.75} />
+                {fuelLabel[vehicle.fuelType] || vehicle.fuelType}
+              </span>
+              {vehicle.location && (
+                <span style={{ padding: '5px 14px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-secondary)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                  <MapPin size={12} strokeWidth={1.75} />
+                  {vehicle.location}
                 </span>
-              ))}
+              )}
             </div>
 
             {/* Pricing */}
@@ -133,7 +184,10 @@ export default function VehicleDetailPage() {
                 <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '12px' }}>คุณสมบัติ</p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {vehicle.features.map((f) => (
-                    <span key={f} style={{ padding: '4px 12px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)' }}>{f}</span>
+                    <span key={f} style={{ padding: '4px 12px', borderRadius: '20px', border: '1px solid var(--border)', fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                      <CheckCircle size={11} strokeWidth={2} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+                      {f}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -145,8 +199,9 @@ export default function VehicleDetailPage() {
                 onClick={() => session ? router.push(`/booking/create?vehicleId=${vehicle._id}`) : router.push('/login')}
                 className="btn-primary"
                 style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '15px' }}
+                disabled={sessionStatus === 'loading'}
               >
-                {session ? 'จองรถคันนี้' : 'เข้าสู่ระบบเพื่อจอง'}
+                {sessionStatus === 'loading' ? 'กำลังโหลด...' : session ? 'จองรถคันนี้' : 'เข้าสู่ระบบเพื่อจอง'}
               </button>
             ) : (
               <div style={{ width: '100%', padding: '16px', background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius-btn)', textAlign: 'center', fontFamily: 'Sarabun, sans-serif', fontSize: '15px', color: 'var(--text-muted)' }}>

@@ -25,7 +25,8 @@ export async function GET(req: NextRequest) {
     ])
 
     return NextResponse.json({ vehicles, total, page, totalPages: Math.ceil(total / limit) })
-  } catch {
-    return NextResponse.json({ error: 'เกิดข้อผิดพลาด' }, { status: 500 })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

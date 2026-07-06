@@ -1,0 +1,42 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="450" fill="#0D0D14"/>
+  <ellipse cx="400" cy="362" rx="285" ry="16" fill="#000" opacity="0.6"/>
+  <!-- Car body -->
+  <path d="M120 280 L160 200 L260 170 L540 170 L640 200 L680 280 L680 310 L120 310 Z" fill="#1A1A22" stroke="#303040" stroke-width="1.5"/>
+  <!-- Roof -->
+  <path d="M220 200 L270 145 L530 145 L580 200 Z" fill="#222230" stroke="#2E2E3E" stroke-width="1"/>
+  <!-- Windshield -->
+  <path d="M230 198 L275 150 L520 150 L570 198 Z" fill="#0A1E35" opacity="0.85"/>
+  <!-- Side windows -->
+  <rect x="235" y="163" width="85" height="35" rx="4" fill="#0A1E35" opacity="0.7"/>
+  <rect x="330" y="163" width="100" height="35" rx="4" fill="#0A1E35" opacity="0.7"/>
+  <rect x="440" y="163" width="85" height="35" rx="4" fill="#0A1E35" opacity="0.6"/>
+  <!-- Chrome trim -->
+  <path d="M120 280 L680 280" stroke="#404050" stroke-width="1.5" opacity="0.7"/>
+  <path d="M220 200 L580 200" stroke="#404050" stroke-width="1" opacity="0.5"/>
+  <!-- Front wheel -->
+  <circle cx="220" cy="310" r="52" fill="#111118" stroke="#2A2A35" stroke-width="2"/>
+  <circle cx="220" cy="310" r="38" fill="#191920"/>
+  <circle cx="220" cy="310" r="18" fill="#F5A623" opacity="0.8"/>
+  <line x1="220" y1="272" x2="220" y2="348" stroke="#333" stroke-width="3"/>
+  <line x1="182" y1="310" x2="258" y2="310" stroke="#333" stroke-width="3"/>
+  <!-- Rear wheel -->
+  <circle cx="580" cy="310" r="52" fill="#111118" stroke="#2A2A35" stroke-width="2"/>
+  <circle cx="580" cy="310" r="38" fill="#191920"/>
+  <circle cx="580" cy="310" r="18" fill="#F5A623" opacity="0.8"/>
+  <line x1="580" y1="272" x2="580" y2="348" stroke="#333" stroke-width="3"/>
+  <line x1="542" y1="310" x2="618" y2="310" stroke="#333" stroke-width="3"/>
+  <!-- Headlight LED strip -->
+  <path d="M122 240 L160 225" stroke="#FFF8E7" stroke-width="3" opacity="0.9"/>
+  <path d="M122 248 L155 230 L155 268 L122 268 Z" fill="#FFF8E7" opacity="0.2"/>
+  <!-- Taillight -->
+  <rect x="645" y="228" width="32" height="40" rx="3" fill="#CC1100" opacity="0.9"/>
+  <rect x="648" y="231" width="12" height="34" rx="2" fill="#FF2200" opacity="0.7"/>
+  <!-- Door lines -->
+  <line x1="340" y1="172" x2="340" y2="305" stroke="#2E2E3E" stroke-width="1"/>
+  <line x1="460" y1="172" x2="460" y2="305" stroke="#2E2E3E" stroke-width="1"/>
+  <!-- Door handles -->
+  <rect x="368" y="235" width="22" height="5" rx="2.5" fill="#555565"/>
+  <rect x="488" y="235" width="22" height="5" rx="2.5" fill="#555565"/>
+  <text x="400" y="420" font-family="'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="300" fill="#444" text-anchor="middle" letter-spacing="6">CARRENT</text>
+</svg>

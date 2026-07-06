@@ -13,7 +13,7 @@ interface Rental {
   deposit: number
   status: string
   pickupLocation?: string
-  vehicleId: { brand: string; model: string; year: number; images: string[] }
+  vehicleId: { brand: string; model: string; year: number; color: string; images: string[] }
 }
 
 export default function BookingConfirmationPage() {
@@ -74,12 +74,20 @@ export default function BookingConfirmationPage() {
             <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '28px', fontWeight: 900, letterSpacing: '0.05em', color: 'var(--accent)' }}>{rental.rentalCode}</p>
           </div>
 
+          {/* Vehicle thumbnail */}
+          {rental.vehicleId?.images?.[0] && (
+            <div style={{ borderRadius: '12px', overflow: 'hidden', marginBottom: '24px', aspectRatio: '16/7', background: 'var(--bg-elevated)' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={rental.vehicleId.images[0]} alt={rental.vehicleId.model} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+          )}
+
           {/* Details */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
             <div>
               <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>รถที่จอง</p>
               <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{rental.vehicleId?.brand} {rental.vehicleId?.model}</p>
-              <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>({rental.vehicleId?.year})</p>
+              <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>({rental.vehicleId?.year}) · {rental.vehicleId?.color}</p>
             </div>
             <div>
               <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '6px' }}>สถานะ</p>

@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { BookOpen, Clock, CheckCircle, XCircle, CalendarDays, User, Car } from 'lucide-react'
+import { Skeleton, SkeletonRow } from '@/components/ui/Skeleton'
 
 interface Rental {
   _id: string
@@ -22,6 +24,52 @@ const statusConfig: Record<string, { text: string; color: string; bg: string }> 
   completed: { text: 'เสร็จสิ้น',    color: '#A09FA6', bg: 'rgba(160,159,166,0.12)' },
   cancelled: { text: 'ยกเลิก',       color: '#F87171', bg: 'rgba(248,113,113,0.12)' },
   overdue:   { text: 'เกินกำหนด',   color: '#FB923C', bg: 'rgba(251,146,60,0.12)' },
+}
+
+function DashboardSkeleton() {
+  return (
+    <div style={{ minHeight: '80vh', paddingTop: '48px', paddingBottom: '80px' }}>
+      <div className="container">
+        {/* Header skeleton */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '40px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <Skeleton height={12} width={80} borderRadius={4} />
+            <Skeleton height={36} width={200} borderRadius={6} />
+            <Skeleton height={15} width={160} borderRadius={4} />
+          </div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <Skeleton height={40} width={90} borderRadius={8} />
+            <Skeleton height={40} width={110} borderRadius={8} />
+          </div>
+        </div>
+
+        {/* Stat card skeletons */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginBottom: '40px' }}>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', padding: '24px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+              <Skeleton height={36} width={60} borderRadius={6} />
+              <Skeleton height={12} width={80} borderRadius={4} />
+            </div>
+          ))}
+        </div>
+
+        {/* Quick nav skeleton */}
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '40px' }}>
+          <Skeleton height={32} width={160} borderRadius={20} />
+          <Skeleton height={32} width={120} borderRadius={20} />
+        </div>
+
+        {/* Booking row skeletons */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', overflow: 'hidden' }}>
+              <SkeletonRow />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default function CustomerDashboardPage() {
@@ -46,18 +94,14 @@ export default function CustomerDashboardPage() {
   const fmt = (d: string) => new Date(d).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })
 
   if (status === 'loading' || loading) {
-    return (
-      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-muted)' }}>กำลังโหลด...</div>
-      </div>
-    )
+    return <DashboardSkeleton />
   }
 
   const stats = [
-    { label: 'จองทั้งหมด',      value: rentals.length,                                    accent: false },
-    { label: 'กำลังดำเนินการ',  value: active.length,                                     accent: true },
-    { label: 'เสร็จสิ้น',       value: rentals.filter(r => r.status === 'completed').length, accent: false },
-    { label: 'ยกเลิก',          value: rentals.filter(r => r.status === 'cancelled').length, accent: false },
+    { label: 'จองทั้งหมด',      value: rentals.length,                                      icon: BookOpen,     accent: false },
+    { label: 'กำลังดำเนินการ',  value: active.length,                                       icon: Clock,        accent: true  },
+    { label: 'เสร็จสิ้น',       value: rentals.filter(r => r.status === 'completed').length, icon: CheckCircle,  accent: false },
+    { label: 'ยกเลิก',          value: rentals.filter(r => r.status === 'cancelled').length, icon: XCircle,      accent: false },
   ]
 
   return (
@@ -73,33 +117,50 @@ export default function CustomerDashboardPage() {
             <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '15px', color: 'var(--text-secondary)' }}>ยินดีต้อนรับสู่แดชบอร์ดของคุณ</p>
           </div>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <Link href="/customer/profile" className="btn-outline" style={{ padding: '10px 20px', fontSize: '13px' }}>โปรไฟล์</Link>
-            <Link href="/vehicles" className="btn-primary" style={{ padding: '10px 20px', fontSize: '13px' }}>จองรถใหม่</Link>
+            <Link href="/customer/profile" className="btn-outline" style={{ padding: '10px 20px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <User size={14} />
+              โปรไฟล์
+            </Link>
+            <Link href="/vehicles" className="btn-primary" style={{ padding: '10px 20px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Car size={14} />
+              จองรถใหม่
+            </Link>
           </div>
         </div>
 
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginBottom: '40px' }}>
-          {stats.map((s) => (
-            <div key={s.label} style={{ background: 'var(--bg-secondary)', border: `1px solid ${s.accent ? 'var(--border-accent)' : 'var(--border)'}`, borderRadius: 'var(--radius-card)', padding: '24px 20px', textAlign: 'center' }}>
-              <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '36px', fontWeight: 900, color: s.accent ? 'var(--accent)' : 'var(--text-primary)', lineHeight: 1 }}>{s.value}</div>
-              <div style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)', marginTop: '6px' }}>{s.label}</div>
-            </div>
-          ))}
+          {stats.map((s) => {
+            const Icon = s.icon
+            return (
+              <div key={s.label} style={{ background: 'var(--bg-secondary)', border: `1px solid ${s.accent ? 'var(--border-accent)' : 'var(--border)'}`, borderRadius: 'var(--radius-card)', padding: '24px 20px', textAlign: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px', color: s.accent ? 'var(--accent)' : 'var(--text-muted)' }}>
+                  <Icon size={18} />
+                </div>
+                <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '36px', fontWeight: 900, color: s.accent ? 'var(--accent)' : 'var(--text-primary)', lineHeight: 1 }}>{s.value}</div>
+                <div style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)', marginTop: '6px' }}>{s.label}</div>
+              </div>
+            )
+          })}
         </div>
 
         {/* Quick nav */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '40px' }}>
           {[
-            { href: '/customer/bookings', label: 'ประวัติการจองทั้งหมด' },
-            { href: '/vehicles', label: 'ดูรถทั้งหมด' },
-          ].map((item) => (
-            <Link key={item.href} href={item.href} style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', padding: '6px 14px', border: '1px solid var(--border)', borderRadius: '20px', transition: 'all 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)' }}>
-              {item.label} →
-            </Link>
-          ))}
+            { href: '/customer/bookings', label: 'ประวัติการจองทั้งหมด', icon: CalendarDays },
+            { href: '/vehicles',          label: 'ดูรถทั้งหมด',          icon: Car          },
+          ].map((item) => {
+            const Icon = item.icon
+            return (
+              <Link key={item.href} href={item.href}
+                style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', padding: '6px 14px', border: '1px solid var(--border)', borderRadius: '20px', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '6px' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)' }}>
+                <Icon size={13} />
+                {item.label}
+              </Link>
+            )
+          })}
         </div>
 
         {/* Active rentals */}
@@ -125,8 +186,9 @@ export default function CustomerDashboardPage() {
             </div>
             {past.length > 5 && (
               <div style={{ marginTop: '16px', textAlign: 'center' }}>
-                <Link href="/customer/bookings" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--accent)', textDecoration: 'none' }}>
-                  ดูทั้งหมด ({past.length} รายการ) →
+                <Link href="/customer/bookings" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--accent)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  <CalendarDays size={14} />
+                  ดูทั้งหมด ({past.length} รายการ)
                 </Link>
               </div>
             )}
@@ -135,9 +197,14 @@ export default function CustomerDashboardPage() {
 
         {rentals.length === 0 && (
           <div style={{ textAlign: 'center', padding: '64px 24px', background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)' }}>
-            <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '48px', color: 'var(--text-muted)', marginBottom: '16px' }}>◎</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px', color: 'var(--text-muted)' }}>
+              <BookOpen size={48} strokeWidth={1.2} />
+            </div>
             <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '16px', color: 'var(--text-secondary)', marginBottom: '8px' }}>ยังไม่มีประวัติการจอง</p>
-            <Link href="/vehicles" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--accent)', textDecoration: 'none' }}>เริ่มจองรถเลย →</Link>
+            <Link href="/vehicles" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--accent)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <Car size={14} />
+              เริ่มจองรถเลย
+            </Link>
           </div>
         )}
       </div>

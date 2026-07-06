@@ -80,7 +80,7 @@ export function Footer() {
             <h4 style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '20px' }}>ติดต่อเรา</h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <li style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-secondary)' }}>โทร: 02-xxx-xxxx</li>
-              <li style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-secondary)' }}>อีเมล: info@carrent.th</li>
+              <li style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-secondary)' }}>อีเมล: info@carallcar.th</li>
               <li>
                 <Link href="/contact" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-secondary)', textDecoration: 'none' }}
                   onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-primary)')}
@@ -95,7 +95,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '28px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
           <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>
-            © {year} CarRent. สงวนลิขสิทธิ์
+            © {year} Carallcar. สงวนลิขสิทธิ์
           </p>
           <div style={{ display: 'flex', gap: '24px' }}>
             {[{ label: 'เงื่อนไขการใช้บริการ', href: '/terms' }, { label: 'นโยบายความเป็นส่วนตัว', href: '/privacy' }].map((item) => (

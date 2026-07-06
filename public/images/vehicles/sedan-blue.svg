@@ -1,0 +1,45 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="40%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#0D1A2A"/>
+      <stop offset="100%" stop-color="#0D0D14"/>
+    </radialGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#fff" stroke-width="0.5" opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+  <ellipse cx="400" cy="362" rx="285" ry="16" fill="#000" opacity="0.5"/>
+  <path d="M120 290 L158 205 L255 172 L545 172 L642 205 L680 290 L680 320 L120 320 Z" fill="#1A4A88" stroke="#163E74" stroke-width="1.5"/>
+  <path d="M218 205 L268 148 L532 148 L582 205 Z" fill="#205599" stroke="#1A4A88" stroke-width="1"/>
+  <path d="M228 203 L272 152 L522 152 L572 203 Z" fill="#0C1E38" opacity="0.8"/>
+  <rect x="238" y="165" width="88" height="36" rx="4" fill="#0C1E38" opacity="0.7"/>
+  <rect x="336" y="165" width="102" height="36" rx="4" fill="#0C1E38" opacity="0.7"/>
+  <rect x="448" y="165" width="88" height="36" rx="4" fill="#0C1E38" opacity="0.6"/>
+  <path d="M120 290 L680 290" stroke="#163E74" stroke-width="1.5" opacity="0.6"/>
+  <circle cx="225" cy="320" r="52" fill="#111118" stroke="#2A2A35" stroke-width="2"/>
+  <circle cx="225" cy="320" r="38" fill="#1C1C24"/>
+  <circle cx="225" cy="320" r="18" fill="#F5A623" opacity="0.85"/>
+  <line x1="225" y1="282" x2="225" y2="358" stroke="#333" stroke-width="3"/>
+  <line x1="187" y1="320" x2="263" y2="320" stroke="#333" stroke-width="3"/>
+  <line x1="199" y1="294" x2="251" y2="346" stroke="#333" stroke-width="2.5"/>
+  <line x1="199" y1="346" x2="251" y2="294" stroke="#333" stroke-width="2.5"/>
+  <circle cx="575" cy="320" r="52" fill="#111118" stroke="#2A2A35" stroke-width="2"/>
+  <circle cx="575" cy="320" r="38" fill="#1C1C24"/>
+  <circle cx="575" cy="320" r="18" fill="#F5A623" opacity="0.85"/>
+  <line x1="575" y1="282" x2="575" y2="358" stroke="#333" stroke-width="3"/>
+  <line x1="537" y1="320" x2="613" y2="320" stroke="#333" stroke-width="3"/>
+  <line x1="549" y1="294" x2="601" y2="346" stroke="#333" stroke-width="2.5"/>
+  <line x1="549" y1="346" x2="601" y2="294" stroke="#333" stroke-width="2.5"/>
+  <path d="M122 250 L158 232 L158 272 L122 272 Z" fill="#FFF8E7" opacity="0.9"/>
+  <rect x="122" y="248" width="6" height="26" fill="#FFF8E7" opacity="0.5"/>
+  <rect x="643" y="230" width="32" height="42" rx="3" fill="#CC2200" opacity="0.9"/>
+  <rect x="646" y="233" width="12" height="36" rx="2" fill="#FF3300" opacity="0.6"/>
+  <line x1="342" y1="174" x2="342" y2="312" stroke="#163E74" stroke-width="1" opacity="0.5"/>
+  <line x1="460" y1="174" x2="460" y2="312" stroke="#163E74" stroke-width="1" opacity="0.5"/>
+  <rect x="368" y="237" width="22" height="5" rx="2.5" fill="#2A5A8A"/>
+  <rect x="488" y="237" width="22" height="5" rx="2.5" fill="#2A5A8A"/>
+  <text x="400" y="422" font-family="'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="300" fill="#555" text-anchor="middle" letter-spacing="8">SEDAN</text>
+  <text x="400" y="438" font-family="'Helvetica Neue', Arial, sans-serif" font-size="10" font-weight="300" fill="#333" text-anchor="middle" letter-spacing="5">CARRENT</text>
+</svg>

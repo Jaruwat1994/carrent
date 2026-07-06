@@ -1,0 +1,56 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="40%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#182818"/>
+      <stop offset="100%" stop-color="#0D100D"/>
+    </radialGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#fff" stroke-width="0.5" opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <rect width="800" height="450" fill="url(#grid)"/>
+  <ellipse cx="400" cy="355" rx="285" ry="15" fill="#000" opacity="0.5"/>
+  <!-- Pickup truck body - cab + bed -->
+  <path d="M108 285 L150 198 L240 162 L445 162 L445 285 Z" fill="#DCDCE0" stroke="#C4C4C8" stroke-width="1.5"/>
+  <!-- Pickup bed -->
+  <path d="M445 162 L445 285 L695 285 L695 260 L680 200 L580 162 Z" fill="#C8C8CC" stroke="#B0B0B8" stroke-width="1.5"/>
+  <!-- Bed rails -->
+  <rect x="446" y="162" width="4" height="123" fill="#B0B0B8"/>
+  <rect x="693" y="260" width="4" height="27" fill="#B0B0B8" rx="1"/>
+  <!-- Cab roof -->
+  <path d="M208 200 L252 142 L418 142 L458 200 Z" fill="#E5E5EA" stroke="#CCCCD2" stroke-width="1"/>
+  <!-- Windshield -->
+  <path d="M220 198 L258 146 L412 146 L452 198 Z" fill="#0C1E38" opacity="0.8"/>
+  <!-- Side windows -->
+  <rect x="232" y="152" width="82" height="42" rx="4" fill="#0C1E38" opacity="0.7"/>
+  <rect x="326" y="152" width="90" height="42" rx="4" fill="#0C1E38" opacity="0.65"/>
+  <!-- Front wheel -->
+  <circle cx="212" cy="315" r="55" fill="#111118" stroke="#2A2A35" stroke-width="2"/>
+  <circle cx="212" cy="315" r="40" fill="#1C1C24"/>
+  <circle cx="212" cy="315" r="20" fill="#6EE08A" opacity="0.85"/>
+  <line x1="212" y1="275" x2="212" y2="355" stroke="#333" stroke-width="3"/>
+  <line x1="172" y1="315" x2="252" y2="315" stroke="#333" stroke-width="3"/>
+  <line x1="184" y1="287" x2="240" y2="343" stroke="#333" stroke-width="2.5"/>
+  <line x1="184" y1="343" x2="240" y2="287" stroke="#333" stroke-width="2.5"/>
+  <!-- Rear wheel -->
+  <circle cx="588" cy="315" r="55" fill="#111118" stroke="#2A2A35" stroke-width="2"/>
+  <circle cx="588" cy="315" r="40" fill="#1C1C24"/>
+  <circle cx="588" cy="315" r="20" fill="#6EE08A" opacity="0.85"/>
+  <line x1="588" y1="275" x2="588" y2="355" stroke="#333" stroke-width="3"/>
+  <line x1="548" y1="315" x2="628" y2="315" stroke="#333" stroke-width="3"/>
+  <line x1="560" y1="287" x2="616" y2="343" stroke="#333" stroke-width="2.5"/>
+  <line x1="560" y1="343" x2="616" y2="287" stroke="#333" stroke-width="2.5"/>
+  <!-- Headlight -->
+  <path d="M110 250 L150 230 L150 272 L110 272 Z" fill="#FFF8E7" opacity="0.9"/>
+  <!-- Taillight -->
+  <rect x="658" y="228" width="34" height="44" rx="3" fill="#CC2200" opacity="0.9"/>
+  <rect x="661" y="231" width="13" height="38" rx="2" fill="#FF3300" opacity="0.6"/>
+  <!-- Door line -->
+  <line x1="332" y1="164" x2="332" y2="280" stroke="#BBBBCA" stroke-width="1" opacity="0.4"/>
+  <!-- Door handles -->
+  <rect x="262" y="232" width="22" height="5" rx="2.5" fill="#A0A0A8"/>
+  <rect x="354" y="232" width="22" height="5" rx="2.5" fill="#A0A0A8"/>
+  <text x="400" y="422" font-family="'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="300" fill="#555" text-anchor="middle" letter-spacing="8">PICKUP</text>
+  <text x="400" y="438" font-family="'Helvetica Neue', Arial, sans-serif" font-size="10" font-weight="300" fill="#333" text-anchor="middle" letter-spacing="5">CARRENT</text>
+</svg>

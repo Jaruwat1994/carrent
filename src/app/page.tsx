@@ -1,11 +1,13 @@
 import Link from 'next/link'
+import { Clock, CalendarDays, User, Building2, Shield, Headphones, Star, Smartphone, MapPin, CheckCircle, ChevronRight } from 'lucide-react'
+import { HeroCarousel } from '@/components/ui/HeroCarousel'
 
 export default function HomePage() {
   const services = [
-    { icon: '◈', title: 'เช่าระยะสั้น', desc: 'เช่ารายวัน เริ่มต้น 800 บาท/วัน', href: '/services' },
-    { icon: '◉', title: 'เช่าระยะยาว', desc: 'เช่ารายเดือน ราคาพิเศษ ประหยัดกว่า', href: '/services' },
-    { icon: '◎', title: 'พร้อมคนขับ', desc: 'สะดวก ปลอดภัย มีคนขับบริการ', href: '/services' },
-    { icon: '◐', title: 'บริการองค์กร', desc: 'แพ็กเกจพิเศษสำหรับองค์กร', href: '/services' },
+    { icon: Clock, title: 'เช่าระยะสั้น', desc: 'เช่ารายวัน เริ่มต้น 800 บาท/วัน', href: '/services' },
+    { icon: CalendarDays, title: 'เช่าระยะยาว', desc: 'เช่ารายเดือน ราคาพิเศษ ประหยัดกว่า', href: '/services' },
+    { icon: User, title: 'พร้อมคนขับ', desc: 'สะดวก ปลอดภัย มีคนขับบริการ', href: '/services' },
+    { icon: Building2, title: 'บริการองค์กร', desc: 'แพ็กเกจพิเศษสำหรับองค์กร', href: '/services' },
   ]
 
   const stats = [
@@ -42,36 +44,41 @@ export default function HomePage() {
         }} />
 
         <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '80px', paddingBottom: '80px' }}>
-          <div style={{ maxWidth: '720px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', background: 'var(--accent-muted)', border: '1px solid var(--border-accent)', borderRadius: '20px', marginBottom: '32px' }} className="animate-fade-in">
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', display: 'block' }} />
-              <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)' }}>Premium Car Rental Thailand</span>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'center' }}>
+            {/* Left — text */}
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', background: 'var(--accent-muted)', border: '1px solid var(--border-accent)', borderRadius: '20px', marginBottom: '32px' }} className="animate-fade-in">
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', display: 'block' }} />
+                <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--accent)' }}>Premium Car Rental Thailand</span>
+              </div>
+
+              <h1 className="animate-fade-up" style={{ fontSize: 'clamp(38px, 5.5vw, 72px)', fontFamily: 'Raleway, sans-serif', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: '24px' }}>
+                ขับทุกเส้นทาง<br />
+                <span style={{ color: 'var(--accent)' }}>ด้วยสไตล์</span>
+                <span style={{ color: 'var(--text-secondary)' }}> ที่คุณเลือก</span>
+              </h1>
+
+              <p className="animate-fade-up delay-100" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '18px', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '40px' }}>
+                รถสะอาด ใหม่ บริการดี ราคาเป็นธรรม จองง่ายผ่านออนไลน์ ยืนยันทันที ไม่ต้องรอ
+              </p>
+
+              <div className="animate-fade-up delay-200" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                <Link href="/vehicles" className="btn-primary" style={{ fontSize: '15px', padding: '16px 32px' }}>
+                  ดูรถทั้งหมด
+                  <span style={{ fontSize: '18px' }}>→</span>
+                </Link>
+                <Link href="/booking/create" className="btn-outline" style={{ fontSize: '15px', padding: '16px 32px' }}>
+                  จองรถเลย
+                </Link>
+              </div>
             </div>
 
-            <h1 className="animate-fade-up" style={{ fontSize: 'clamp(42px, 7vw, 80px)', fontFamily: 'Raleway, sans-serif', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: '24px' }}>
-              ขับทุกเส้นทาง<br />
-              <span style={{ color: 'var(--accent)' }}>ด้วยสไตล์</span>
-              <span style={{ color: 'var(--text-secondary)' }}> ที่คุณเลือก</span>
-            </h1>
-
-            <p className="animate-fade-up delay-100" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '18px', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '40px', maxWidth: '540px' }}>
-              รถสะอาด ใหม่ บริการดี ราคาเป็นธรรม จองง่ายผ่านออนไลน์ ยืนยันทันที ไม่ต้องรอ
-            </p>
-
-            <div className="animate-fade-up delay-200" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-              <Link href="/vehicles" className="btn-primary" style={{ fontSize: '15px', padding: '16px 32px' }}>
-                ดูรถทั้งหมด
-                <span style={{ fontSize: '18px' }}>→</span>
-              </Link>
-              <Link href="/booking/create" className="btn-outline" style={{ fontSize: '15px', padding: '16px 32px' }}>
-                จองรถเลย
-              </Link>
+            {/* Right — car carousel */}
+            <div className="animate-fade-in delay-200" style={{ position: 'relative' }}>
+              <HeroCarousel />
             </div>
           </div>
         </div>
-
-        {/* Decorative accent line */}
-        <div style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', width: '2px', height: '40%', background: 'linear-gradient(to bottom, transparent, var(--accent), transparent)', opacity: 0.4 }} />
       </section>
 
       {/* ─── STATS ─── */}
@@ -109,7 +116,9 @@ export default function HomePage() {
                 display: 'block',
                 animationDelay: `${i * 0.1}s`,
               }}>
-                <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '28px', color: 'var(--accent)', marginBottom: '20px', lineHeight: 1 }}>{s.icon}</div>
+                <div style={{ color: 'var(--accent)', marginBottom: '20px', lineHeight: 1 }}>
+                  <s.icon size={28} />
+                </div>
                 <h3 style={{ fontFamily: 'Raleway, sans-serif', fontSize: '17px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>{s.title}</h3>
                 <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.desc}</p>
                 <div style={{ marginTop: '24px', display: 'flex', alignItems: 'center', gap: '6px', fontFamily: 'Raleway, sans-serif', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent)', opacity: 0.7 }}>
@@ -140,7 +149,7 @@ export default function HomePage() {
       <section style={{ paddingTop: '96px', paddingBottom: '96px' }}>
         <div className="container">
           <div style={{ marginBottom: '56px', textAlign: 'center' }}>
-            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>Why CarRent</p>
+            <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>Why Carallcar</p>
             <h2 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>ทำไมต้องเลือกเรา?</h2>
           </div>
 

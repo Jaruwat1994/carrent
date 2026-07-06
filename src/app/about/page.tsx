@@ -24,7 +24,7 @@ export default function AboutPage() {
             <span style={{ color: 'var(--accent)' }}>มากว่า 10 ปี</span>
           </h1>
           <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '17px', color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: '560px' }}>
-            CarRent มุ่งมั่นให้บริการเช่ารถที่มีคุณภาพ ปลอดภัย และราคาคุ้มค่า ด้วยทีมงานมืออาชีพ
+            Carallcar มุ่งมั่นให้บริการเช่ารถที่มีคุณภาพ ปลอดภัย และราคาคุ้มค่า ด้วยทีมงานมืออาชีพ
             พร้อมให้บริการตลอด 24 ชั่วโมง เพื่อตอบสนองทุกความต้องการในการเดินทาง
           </p>
         </div>
@@ -52,7 +52,7 @@ export default function AboutPage() {
               <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>Our Mission</p>
               <h2 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-primary)', marginBottom: '20px' }}>พันธกิจของเรา</h2>
               <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '16px' }}>
-                CarRent มุ่งมั่นให้บริการเช่ารถที่มีคุณภาพ ปลอดภัย และราคาคุ้มค่า ด้วยทีมงานมืออาชีพ
+                Carallcar มุ่งมั่นให้บริการเช่ารถที่มีคุณภาพ ปลอดภัย และราคาคุ้มค่า ด้วยทีมงานมืออาชีพ
                 พร้อมให้บริการตลอด 24 ชั่วโมง เพื่อตอบสนองทุกความต้องการในการเดินทางของลูกค้า
               </p>
               <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.8 }}>

@@ -1,9 +1,9 @@
 'use client'
 
 const articles = [
-  { num: '01', title: 'CarRent เปิดตัวบริการเช่ารถไฟฟ้า EV', date: '1 กรกฎาคม 2026', excerpt: 'CarRent ขยายฝูงบินด้วยรถยนต์ไฟฟ้ารุ่นใหม่ล่าสุด ตอบรับกระแสรักษ์โลก' },
+  { num: '01', title: 'Carallcar เปิดตัวบริการเช่ารถไฟฟ้า EV', date: '1 กรกฎาคม 2026', excerpt: 'Carallcar ขยายฝูงบินด้วยรถยนต์ไฟฟ้ารุ่นใหม่ล่าสุด ตอบรับกระแสรักษ์โลก' },
   { num: '02', title: 'โปรโมชั่นพิเศษเดือนกรกฎาคม ลดสูงสุด 20%', date: '28 มิถุนายน 2026', excerpt: 'รับส่วนลดพิเศษเมื่อจองรถผ่านแอปออนไลน์ในเดือนกรกฎาคมนี้' },
-  { num: '03', title: 'CarRent ขยายสาขาใหม่ภาคเหนือ', date: '20 มิถุนายน 2026', excerpt: 'เปิดสาขาใหม่ที่เชียงใหม่และเชียงราย เพื่อรองรับนักท่องเที่ยวภาคเหนือ' },
+  { num: '03', title: 'Carallcar ขยายสาขาใหม่ภาคเหนือ', date: '20 มิถุนายน 2026', excerpt: 'เปิดสาขาใหม่ที่เชียงใหม่และเชียงราย เพื่อรองรับนักท่องเที่ยวภาคเหนือ' },
 ]
 
 export default function NewsPage() {
@@ -13,7 +13,7 @@ export default function NewsPage() {
         <div className="container">
           <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>News</p>
           <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, letterSpacing: '-0.03em', color: 'var(--text-primary)', marginBottom: '16px' }}>ข่าวสาร</h1>
-          <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '17px', color: 'var(--text-secondary)' }}>ข่าวสารและกิจกรรมล่าสุดจาก CarRent</p>
+          <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '17px', color: 'var(--text-secondary)' }}>ข่าวสารและกิจกรรมล่าสุดจาก Carallcar</p>
         </div>
       </section>
 

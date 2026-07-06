@@ -16,7 +16,7 @@ export default function CareersPage() {
         <div className="container">
           <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '12px' }}>Careers</p>
           <h1 style={{ fontFamily: 'Raleway, sans-serif', fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 900, letterSpacing: '-0.03em', color: 'var(--text-primary)', marginBottom: '16px' }}>ร่วมงานกับเรา</h1>
-          <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '17px', color: 'var(--text-secondary)' }}>มาเป็นส่วนหนึ่งของทีม CarRent ที่กำลังเติบโต</p>
+          <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '17px', color: 'var(--text-secondary)' }}>มาเป็นส่วนหนึ่งของทีม Carallcar ที่กำลังเติบโต</p>
         </div>
       </section>
 

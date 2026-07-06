@@ -16,6 +16,8 @@ interface Vehicle {
   images: string[]
 }
 
+type DurationOption = 'custom' | 'daily' | 'weekly' | 'monthly'
+
 export function BookingCreateForm() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -23,6 +25,10 @@ export function BookingCreateForm() {
   const vehicleId = searchParams.get('vehicleId')
 
   const [vehicle, setVehicle] = useState<Vehicle | null>(null)
+  const [durationOption, setDurationOption] = useState<DurationOption>('custom')
+  const [daysCount, setDaysCount] = useState(1)
+  const [weeksCount, setWeeksCount] = useState(1)
+  const [monthsCount, setMonthsCount] = useState(1)
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [pickupLocation, setPickupLocation] = useState('')
@@ -42,6 +48,20 @@ export function BookingCreateForm() {
       .then((d) => setVehicle(d.vehicle))
   }, [vehicleId])
 
+  // Auto-calculate end date when duration option changes
+  useEffect(() => {
+    if (!startDate || durationOption === 'custom') return
+    const start = new Date(startDate)
+    let days = 0
+    if (durationOption === 'daily') days = daysCount
+    else if (durationOption === 'weekly') days = weeksCount * 7
+    else if (durationOption === 'monthly') days = monthsCount * 30
+
+    const end = new Date(start)
+    end.setDate(end.getDate() + days)
+    setEndDate(end.toISOString().split('T')[0])
+  }, [startDate, durationOption, daysCount, weeksCount, monthsCount])
+
   const calcPrice = () => {
     if (!vehicle || !startDate || !endDate) return 0
     const days = Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24))
@@ -49,6 +69,15 @@ export function BookingCreateForm() {
     if (days >= 30) return Math.ceil(days / 30) * vehicle.pricePerMonth
     if (days >= 7) return Math.ceil(days / 7) * vehicle.pricePerWeek
     return days * vehicle.pricePerDay
+  }
+
+  const getPricingTier = () => {
+    if (!startDate || !endDate) return null
+    const days = Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24))
+    if (days < 1) return null
+    if (days >= 30) return 'monthly'
+    if (days >= 7) return 'weekly'
+    return 'daily'
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,6 +97,8 @@ export function BookingCreateForm() {
 
   const totalPrice = calcPrice()
   const today = new Date().toISOString().split('T')[0]
+  const pricingTier = getPricingTier()
+  const rentalDays = startDate && endDate ? Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)) : 0
 
   if (status === 'loading') return (
     <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -100,9 +131,13 @@ export function BookingCreateForm() {
                 <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '24px', color: 'var(--text-muted)' }}>◎</span>
               )}
             </div>
-            <div>
+            <div style={{ flex: 1 }}>
               <p style={{ fontFamily: 'Raleway, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text-primary)' }}>{vehicle.brand} {vehicle.model} ({vehicle.year})</p>
-              <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--accent)', marginTop: '2px' }}>฿{vehicle.pricePerDay.toLocaleString()}/วัน</p>
+              <div style={{ display: 'flex', gap: '16px', marginTop: '4px', fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)' }}>
+                <span>฿{vehicle.pricePerDay.toLocaleString()}/วัน</span>
+                <span>฿{vehicle.pricePerWeek.toLocaleString()}/สัปดาห์</span>
+                <span>฿{vehicle.pricePerMonth.toLocaleString()}/เดือน</span>
+              </div>
             </div>
           </div>
         )}
@@ -115,6 +150,84 @@ export function BookingCreateForm() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', padding: '36px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+          {/* Rental Duration Options */}
+          <div>
+            <label className="field-label">เลือกระยะเวลาเช่า</label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}>
+              {[
+                { value: 'daily' as DurationOption, label: 'รายวัน' },
+                { value: 'weekly' as DurationOption, label: 'รายสัปดาห์' },
+                { value: 'monthly' as DurationOption, label: 'รายเดือน' },
+                { value: 'custom' as DurationOption, label: 'กำหนดเอง' },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setDurationOption(opt.value)}
+                  style={{
+                    padding: '10px 12px',
+                    background: durationOption === opt.value ? 'var(--accent)' : 'var(--bg-elevated)',
+                    border: `1px solid ${durationOption === opt.value ? 'var(--accent)' : 'var(--border)'}`,
+                    borderRadius: '8px',
+                    color: durationOption === opt.value ? '#000' : 'var(--text-secondary)',
+                    fontFamily: 'Sarabun, sans-serif',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Duration count selectors */}
+            {durationOption === 'daily' && (
+              <div>
+                <label className="field-label" style={{ fontSize: '12px' }}>จำนวนวัน</label>
+                <input
+                  type="number"
+                  value={daysCount}
+                  onChange={e => setDaysCount(Math.max(1, parseInt(e.target.value) || 1))}
+                  min={1}
+                  max={29}
+                  className="input-field"
+                  style={{ maxWidth: '120px' }}
+                />
+              </div>
+            )}
+            {durationOption === 'weekly' && (
+              <div>
+                <label className="field-label" style={{ fontSize: '12px' }}>จำนวนสัปดาห์</label>
+                <input
+                  type="number"
+                  value={weeksCount}
+                  onChange={e => setWeeksCount(Math.max(1, parseInt(e.target.value) || 1))}
+                  min={1}
+                  max={4}
+                  className="input-field"
+                  style={{ maxWidth: '120px' }}
+                />
+              </div>
+            )}
+            {durationOption === 'monthly' && (
+              <div>
+                <label className="field-label" style={{ fontSize: '12px' }}>จำนวนเดือน</label>
+                <input
+                  type="number"
+                  value={monthsCount}
+                  onChange={e => setMonthsCount(Math.max(1, parseInt(e.target.value) || 1))}
+                  min={1}
+                  max={12}
+                  className="input-field"
+                  style={{ maxWidth: '120px' }}
+                />
+              </div>
+            )}
+          </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
               <label className="field-label">วันรับรถ</label>
@@ -122,7 +235,16 @@ export function BookingCreateForm() {
             </div>
             <div>
               <label className="field-label">วันคืนรถ</label>
-              <input type="date" value={endDate} min={startDate || today} onChange={e => setEndDate(e.target.value)} required className="input-field" />
+              <input
+                type="date"
+                value={endDate}
+                min={startDate || today}
+                onChange={e => setEndDate(e.target.value)}
+                required
+                className="input-field"
+                disabled={durationOption !== 'custom'}
+                style={{ opacity: durationOption !== 'custom' ? 0.6 : 1 }}
+              />
             </div>
           </div>
 
@@ -144,13 +266,20 @@ export function BookingCreateForm() {
           {/* Price summary */}
           {totalPrice > 0 && (
             <div style={{ background: 'var(--bg-primary)', border: '1px solid var(--border-accent)', borderRadius: '12px', padding: '20px 24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
-                <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-secondary)' }}>ราคารวมโดยประมาณ</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '12px' }}>
+                <div>
+                  <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--text-secondary)' }}>ระยะเวลา: {rentalDays} วัน</span>
+                  {pricingTier && (
+                    <div style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--accent)', marginTop: '4px' }}>
+                      คิดตามอัตรา: {pricingTier === 'monthly' ? 'รายเดือน' : pricingTier === 'weekly' ? 'รายสัปดาห์' : 'รายวัน'}
+                    </div>
+                  )}
+                </div>
                 <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '26px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.02em' }}>฿{totalPrice.toLocaleString()}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>
                 <span style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)' }}>มัดจำ 30%</span>
-                <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '13px', color: 'var(--text-secondary)' }}>฿{Math.round(totalPrice * 0.3).toLocaleString()}</span>
+                <span style={{ fontFamily: 'Raleway, sans-serif', fontSize: '15px', fontWeight: 700, color: 'var(--text-secondary)' }}>฿{Math.round(totalPrice * 0.3).toLocaleString()}</span>
               </div>
             </div>
           )}

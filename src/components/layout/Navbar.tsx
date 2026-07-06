@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 export function Navbar() {
   const { data: session } = useSession()
@@ -41,21 +42,28 @@ export function Navbar() {
     >
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '70px' }}>
         {/* Logo */}
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0px' }}>
           <span style={{
             fontFamily: 'Raleway, sans-serif',
             fontWeight: 900,
             fontSize: '22px',
             color: 'var(--accent)',
             letterSpacing: '-0.03em',
-          }}>CAR</span>
+          }}>Car</span>
           <span style={{
             fontFamily: 'Raleway, sans-serif',
             fontWeight: 300,
             fontSize: '22px',
             color: 'var(--text-primary)',
-            letterSpacing: '0.08em',
-          }}>RENT</span>
+            letterSpacing: '-0.01em',
+          }}>all</span>
+          <span style={{
+            fontFamily: 'Raleway, sans-serif',
+            fontWeight: 900,
+            fontSize: '22px',
+            color: 'var(--accent)',
+            letterSpacing: '-0.03em',
+          }}>Car</span>
         </Link>
 
         {/* Desktop nav */}
@@ -82,7 +90,8 @@ export function Navbar() {
         </div>
 
         {/* Auth */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }} className="desktop-nav">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }} className="desktop-nav">
+          <ThemeToggle />
           {session ? (
             <>
               <Link href="/customer/dashboard" style={{

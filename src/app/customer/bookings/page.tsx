@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { CalendarX, ChevronLeft } from 'lucide-react'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 interface Rental {
   _id: string
@@ -12,7 +14,7 @@ interface Rental {
   endDate: string
   totalPrice: number
   status: string
-  vehicleId: { brand: string; model: string; year: number; images: string[] }
+  vehicleId: { brand: string; model: string; year: number; color: string; images: string[] }
 }
 
 const statusConfig: Record<string, { text: string; color: string; bg: string }> = {
@@ -62,8 +64,27 @@ export default function CustomerBookingsPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontFamily: 'Sarabun, sans-serif', color: 'var(--text-muted)' }}>กำลังโหลด...</span>
+      <div style={{ minHeight: '80vh', paddingTop: '48px', paddingBottom: '80px' }}>
+        <div className="container">
+          <div style={{ marginBottom: '40px' }}>
+            <Skeleton height={12} width={80} style={{ marginBottom: '12px' }} />
+            <Skeleton height={32} width={200} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', padding: '24px 28px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
+                    <Skeleton height={16} width="40%" />
+                    <Skeleton height={13} width="50%" />
+                    <Skeleton height={12} width="30%" />
+                  </div>
+                  <Skeleton height={28} width={100} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     )
   }
@@ -80,7 +101,7 @@ export default function CustomerBookingsPage() {
           <Link href="/customer/dashboard" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-muted)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
             onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
-            ← แดชบอร์ด
+            <ChevronLeft size={14} /> แดชบอร์ด
           </Link>
         </div>
 
@@ -99,7 +120,9 @@ export default function CustomerBookingsPage() {
 
         {rentals.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '64px 24px', background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)' }}>
-            <div style={{ fontFamily: 'Raleway, sans-serif', fontSize: '48px', color: 'var(--text-muted)', marginBottom: '16px' }}>◎</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+              <CalendarX size={48} color="var(--text-muted)" />
+            </div>
             <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '16px', color: 'var(--text-secondary)', marginBottom: '8px' }}>ยังไม่มีประวัติการจอง</p>
             <Link href="/vehicles" style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '14px', color: 'var(--accent)', textDecoration: 'none' }}>จองรถเลย →</Link>
           </div>

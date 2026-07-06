@@ -1,7 +1,7 @@
 export default function ContactPage() {
   const info = [
     { num: '01', title: 'โทรศัพท์', detail: '02-xxx-xxxx', sub: 'จันทร์-ศุกร์ 08:00-18:00' },
-    { num: '02', title: 'อีเมล', detail: 'info@carrent.th', sub: 'ตอบกลับภายใน 24 ชม.' },
+    { num: '02', title: 'อีเมล', detail: 'info@carallcar.th', sub: 'ตอบกลับภายใน 24 ชม.' },
     { num: '03', title: 'ที่อยู่', detail: 'กรุงเทพมหานคร', sub: 'สำนักงานใหญ่' },
   ]
 
