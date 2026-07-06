@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getToken } from 'next-auth/jwt'
 import { jwtVerify } from 'jose'
+import { auth } from '@/lib/auth'
 
 const adminSecret = new TextEncoder().encode(process.env.AUTH_SECRET || 'fallback-secret')
 
@@ -25,8 +25,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET })
-  const isAuth = !!token
+  const session = await auth()
+  const isAuth = !!session
   const protectedPaths = ['/customer', '/booking/create']
   const isProtected = protectedPaths.some((p) => pathname.startsWith(p))
 
