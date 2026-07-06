@@ -5,6 +5,7 @@ import { connectDB } from '@/lib/mongodb'
 import { Customer } from '@/lib/models/Customer'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
   providers: [
     CredentialsProvider({
       name: 'credentials',

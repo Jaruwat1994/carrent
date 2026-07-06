@@ -25,10 +25,15 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next()
   }
 
-  const session = await auth()
-  const isAuth = !!session
   const protectedPaths = ['/customer', '/booking/create']
   const isProtected = protectedPaths.some((p) => pathname.startsWith(p))
+  const authPaths = ['/login', '/register']
+  const isAuthPage = authPaths.includes(pathname)
+
+  if (!isProtected && !isAuthPage) return NextResponse.next()
+
+  const session = await auth()
+  const isAuth = !!session
 
   if (isProtected && !isAuth) {
     const url = new URL('/login', req.url)
