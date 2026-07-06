@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import { connectDB } from '@/lib/mongodb'
 import { Admin } from '@/lib/models/Admin'
 
-const secret = new TextEncoder().encode(process.env.AUTH_SECRET || 'fallback-secret')
+const secret = new TextEncoder().encode(process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret')
 
 export async function POST(req: NextRequest) {
   try {

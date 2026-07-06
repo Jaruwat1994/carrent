@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 import { auth } from '@/lib/auth'
 
-const adminSecret = new TextEncoder().encode(process.env.AUTH_SECRET || 'fallback-secret')
+const adminSecret = new TextEncoder().encode(process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret')
 
 async function verifyAdminToken(req: NextRequest) {
   const token = req.cookies.get('admin-token')?.value
