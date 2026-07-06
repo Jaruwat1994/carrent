@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Pencil, Trash2, Plus, CreditCard, Building2 } from 'lucide-react'
+import { AdminSidebar } from '@/components/admin/AdminSidebar'
 
 interface PaymentMethod {
   _id: string
@@ -96,13 +97,19 @@ export default function AdminPaymentsPage() {
   }
 
   if (loading) return (
-    <div style={{ padding: '24px' }}>
-      <span style={{ fontFamily: 'Fira Code, monospace', fontSize: '13px', color: '#6b7280' }}>กำลังโหลด...</span>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#080c12' }}>
+      <AdminSidebar />
+      <main style={{ flex: 1, marginLeft: '240px', padding: '40px 48px' }}>
+        <span style={{ fontFamily: 'Fira Code, monospace', fontSize: '13px', color: '#6b7280' }}>กำลังโหลด...</span>
+      </main>
     </div>
   )
 
   return (
-    <div style={{ padding: '24px' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#080c12' }}>
+      <AdminSidebar />
+      <main style={{ flex: 1, marginLeft: '240px', padding: '40px 48px', overflowY: 'auto' }}>
+    <div>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
@@ -233,6 +240,8 @@ export default function AdminPaymentsPage() {
           </div>
         </div>
       )}
+    </div>
+      </main>
     </div>
   )
 }

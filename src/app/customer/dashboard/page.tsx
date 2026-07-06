@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { BookOpen, Clock, CheckCircle, XCircle, CalendarDays, User, Car } from 'lucide-react'
+import { BookOpen, Clock, CheckCircle, XCircle, CalendarDays, User, Car, CreditCard } from 'lucide-react'
 import { Skeleton, SkeletonRow } from '@/components/ui/Skeleton'
 
 interface Rental {
@@ -14,6 +14,7 @@ interface Rental {
   endDate: string
   totalPrice: number
   status: string
+  paymentStatus?: string
   vehicleId: { brand: string; model: string; year: number }
 }
 
@@ -214,6 +215,7 @@ export default function CustomerDashboardPage() {
 
 function RentalRow({ rental, fmt }: { rental: Rental; fmt: (d: string) => string }) {
   const s = statusConfig[rental.status] ?? { text: rental.status, color: 'var(--text-muted)', bg: 'var(--bg-elevated)' }
+  const showPayBtn = rental.status === 'confirmed' && rental.paymentStatus !== 'fully_paid'
   return (
     <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-card)', padding: '20px 24px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', transition: 'border-color 0.2s' }}
       onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--border-accent)')}
@@ -226,13 +228,27 @@ function RentalRow({ rental, fmt }: { rental: Rental; fmt: (d: string) => string
           <span style={{ padding: '3px 10px', borderRadius: '20px', background: s.bg, fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em', color: s.color }}>
             {s.text}
           </span>
+          {rental.paymentStatus === 'deposit_paid' && (
+            <span style={{ padding: '3px 10px', borderRadius: '20px', background: 'rgba(110,224,138,0.1)', fontFamily: 'Raleway, sans-serif', fontSize: '11px', fontWeight: 700, color: '#6EE08A' }}>
+              ชำระมัดจำแล้ว
+            </span>
+          )}
         </div>
         <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '13px', color: 'var(--text-secondary)' }}>{fmt(rental.startDate)} — {fmt(rental.endDate)}</p>
         <p style={{ fontFamily: 'Sarabun, sans-serif', fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>รหัส: {rental.rentalCode}</p>
       </div>
-      <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '20px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.02em' }}>
-        ฿{rental.totalPrice.toLocaleString()}
-      </p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+        <p style={{ fontFamily: 'Raleway, sans-serif', fontSize: '20px', fontWeight: 900, color: 'var(--accent)', letterSpacing: '-0.02em' }}>
+          ฿{rental.totalPrice.toLocaleString()}
+        </p>
+        {showPayBtn && (
+          <Link href={`/customer/checkout/${rental._id}`} className="btn-primary"
+            style={{ padding: '8px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <CreditCard size={13} />
+            ชำระเงิน
+          </Link>
+        )}
+      </div>
     </div>
   )
 }

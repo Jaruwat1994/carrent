@@ -13,6 +13,11 @@ export interface IRental extends Document {
   pickupLocation?: string
   returnLocation?: string
   status: 'pending' | 'confirmed' | 'active' | 'completed' | 'cancelled' | 'overdue'
+  paymentStatus: 'unpaid' | 'deposit_paid' | 'fully_paid'
+  depositProofUrl?: string
+  depositPaidAt?: Date
+  fullPaymentProofUrl?: string
+  fullPaymentPaidAt?: Date
   contractImage?: string
   pickupImage?: string
   returnImage?: string
@@ -39,6 +44,15 @@ const RentalSchema = new Schema<IRental>(
       enum: ['pending', 'confirmed', 'active', 'completed', 'cancelled', 'overdue'],
       default: 'pending',
     },
+    paymentStatus: {
+      type: String,
+      enum: ['unpaid', 'deposit_paid', 'fully_paid'],
+      default: 'unpaid',
+    },
+    depositProofUrl: { type: String },
+    depositPaidAt: { type: Date },
+    fullPaymentProofUrl: { type: String },
+    fullPaymentPaidAt: { type: Date },
     contractImage: { type: String },
     pickupImage: { type: String },
     returnImage: { type: String },
