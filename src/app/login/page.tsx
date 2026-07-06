@@ -24,7 +24,8 @@ function LoginForm() {
     if (result?.error) {
       setError('อีเมลหรือรหัสผ่านไม่ถูกต้อง')
     } else {
-      router.push('/customer/dashboard')
+      const callbackUrl = searchParams.get('callbackUrl')
+      router.push(callbackUrl || '/customer/dashboard')
     }
   }
 

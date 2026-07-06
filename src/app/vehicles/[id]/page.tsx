@@ -196,7 +196,10 @@ export default function VehicleDetailPage() {
             {/* CTA */}
             {isAvailable ? (
               <button
-                onClick={() => session ? router.push(`/booking/create?vehicleId=${vehicle._id}`) : router.push('/login')}
+                onClick={() => session
+                  ? router.push(`/booking/create?vehicleId=${vehicle._id}`)
+                  : router.push(`/login?callbackUrl=/booking/create?vehicleId=${vehicle._id}`)
+                }
                 className="btn-primary"
                 style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '15px' }}
                 disabled={sessionStatus === 'loading'}
