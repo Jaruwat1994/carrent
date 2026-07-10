@@ -2,14 +2,15 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Car, CalendarDays, Users, LogOut, GalleryHorizontal, CreditCard } from 'lucide-react'
+import { LayoutDashboard, Car, CalendarDays, Users, LogOut, GalleryHorizontal, CreditCard, Receipt } from 'lucide-react'
 
 const navItems = [
   { href: '/admin', label: 'ภาพรวม',     Icon: LayoutDashboard, exact: true },
   { href: '/admin/vehicles',  label: 'จัดการรถ',   Icon: Car },
   { href: '/admin/bookings',  label: 'การจอง',     Icon: CalendarDays },
   { href: '/admin/customers', label: 'ลูกค้า',     Icon: Users },
-  { href: '/admin/payments',  label: 'ชำระเงิน',   Icon: CreditCard },
+  { href: '/admin/payments',  label: 'ช่องทางชำระเงิน',   Icon: CreditCard },
+  { href: '/admin/transactions',  label: 'รายการโอนเงิน',   Icon: Receipt },
   { href: '/admin/carousel',  label: 'Carousel',   Icon: GalleryHorizontal },
 ]
 
